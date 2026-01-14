@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <pattern id="silhouettes" x="0" y="0" width="200" height="200" patternUnits="userSpaceOnUse">
+      <!-- Diverse silhouette profiles - simplified outlines -->
+      
+      <!-- Person 1 - facing right -->
+      <path d="M20 80 Q25 60 30 50 Q35 45 40 45 Q45 45 48 48 Q50 52 50 58 Q50 65 48 70 Q45 75 42 78 L42 85 Q42 95 40 100 L40 120" 
+            stroke="#4A5F7A" stroke-width="1.5" fill="none" opacity="0.6"/>
+      
+      <!-- Person 2 - facing left -->
+      <path d="M80 75 Q75 60 70 52 Q65 48 60 48 Q55 48 52 52 Q50 56 50 62 Q50 68 52 73 Q55 78 58 81 L58 88 Q58 98 60 103 L60 125" 
+            stroke="#4A5F7A" stroke-width="1.5" fill="none" opacity="0.5"/>
+      
+      <!-- Person 3 - child profile -->
+      <path d="M130 90 Q135 78 140 72 Q145 68 150 68 Q155 68 158 71 Q160 74 160 78 Q160 83 158 87 Q155 91 152 93 L152 98 Q152 105 150 109 L150 125" 
+            stroke="#4A5F7A" stroke-width="1.3" fill="none" opacity="0.7"/>
+      
+      <!-- Person 4 - elder profile -->
+      <path d="M30 180 Q35 165 40 157 Q45 152 50 152 Q55 152 58 155 Q60 159 60 165 Q60 172 58 177 Q55 182 52 185 L52 192 Q52 202 50 207 L50 230" 
+            stroke="#4A5F7A" stroke-width="1.5" fill="none" opacity="0.55"/>
+      
+      <!-- Person 5 - different angle -->
+      <path d="M120 175 Q125 162 130 155 Q135 151 140 151 Q145 151 148 154 Q150 158 150 164 Q150 170 148 175 Q145 180 142 183 L142 190 Q142 200 140 205 L140 228" 
+            stroke="#4A5F7A" stroke-width="1.4" fill="none" opacity="0.6"/>
+      
+      <!-- Person 6 - head and shoulders -->
+      <path d="M170 85 Q175 70 180 63 Q185 59 190 59 Q195 59 198 62 Q200 66 200 72 Q200 78 198 83 Q195 88 192 91 L192 98" 
+            stroke="#4A5F7A" stroke-width="1.5" fill="none" opacity="0.65"/>
+    </pattern>
+  </defs>
+  
+  <!-- Fill entire viewbox with pattern -->
+  <rect width="100%" height="100%" fill="url(#silhouettes)"/>
+</svg>
