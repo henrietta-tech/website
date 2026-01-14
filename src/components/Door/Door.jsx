@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';  // ADDED THIS
 import { ChevronDown, ChevronUp } from 'lucide-react';
 
 /**
@@ -91,12 +92,12 @@ const Door = ({ door, isExpanded, isHighlighted, onToggle, onOpenRegistry, doorR
           </button>
         )}
 
-        {/* Link */}
+        {/* Link - CHANGED FROM <a> TO <Link> */}
         {content.link && (
           <p className="text-sm mt-6">
-            <a href={content.link.href} className="text-[#BFCEEA] hover:text-white underline">
+            <Link to={content.link.href} className="text-[#BFCEEA] hover:text-white underline">
               {content.link.text}
-            </a>
+            </Link>
           </p>
         )}
       </div>
