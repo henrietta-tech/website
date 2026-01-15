@@ -31,7 +31,7 @@ const ExplorePage = () => {
       <Navigation onJoinRegistry={openRegistry} />
       
       <div className="relative flex-1 bg-[#210606]">
-        {/* Background Pattern - Limited height to not go past footer */}
+        {/* Background Pattern - Fixed height to prevent shifting */}
         <div 
           className="absolute top-0 left-0 right-0"
           style={{
@@ -39,32 +39,32 @@ const ExplorePage = () => {
             backgroundSize: window.innerWidth < 768 ? 'auto 45%' : 'contain',
             backgroundPosition: 'top center',
             backgroundRepeat: 'repeat',
-            height: '250vh', // Reduced from 300vh
-            maxHeight: '100%', // Won't extend beyond parent container
+            height: '250vh',
+            maxHeight: '100%',
             pointerEvents: 'none'
           }}
         />
         
-        {/* Solid background overlay covering header area */}
+        {/* Solid background overlay - covers navbar + "Henrietta" title */}
         <div 
           className="absolute inset-x-0 top-0 z-10 bg-[#231F20]"
           style={{
-            height: '180px'
+            height: '240px'
           }}
         />
         
-        {/* Gradient starts after "Henrietta" title */}
+        {/* Gradient starts after "Henrietta" title, before subtitle */}
         <div 
           className="absolute inset-x-0 z-10 pointer-events-none"
           style={{
-            top: '180px',
+            top: '240px',
             height: '120px',
             background: 'linear-gradient(to bottom, #231F20 0%, transparent 100%)'
           }}
         />
         
-        {/* Header */}
-        <div className="relative z-20 pt-12 pb-16 md:pt-16 md:pb-20">
+        {/* Header - More breathing room before accordions */}
+        <div className="relative z-20 pt-12 pb-24 md:pt-16 md:pb-32">
           <div className="max-w-3xl mx-auto px-6">
             <h1 className="text-3xl md:text-4xl font-bold text-[#7B85B8] mb-4">
               Henrietta
