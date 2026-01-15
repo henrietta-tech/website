@@ -31,51 +31,42 @@ const ExplorePage = () => {
       <Navigation onJoinRegistry={openRegistry} />
       
       <div className="relative flex-1 bg-[#210606]">
+        {/* Background Pattern - Reduced size for mobile */}
         <div 
           className="absolute inset-0 w-full h-full"
           style={{
             backgroundImage: `url(${exploreBackground})`,
-            backgroundSize: window.innerWidth < 768 ? 'auto 150%' : 'contain',
+            backgroundSize: window.innerWidth < 768 ? 'auto 100%' : 'contain',
             backgroundPosition: 'top center',
             backgroundRepeat: 'repeat',
             minHeight: '100%'
           }}
         />
         
+        {/* Simple top fade from navbar */}
         <div 
           className="absolute inset-x-0 top-0 pointer-events-none z-10"
           style={{
-            height: '120px',
-            background: 'linear-gradient(to bottom, #231F20 0%, #231F20 25%, transparent 100%)'
+            height: '80px',
+            background: 'linear-gradient(to bottom, #231F20 0%, transparent 100%)'
           }}
         />
         
-        <div className="relative z-20">
-          <div className="max-w-4xl mx-auto px-8 md:px-12">
-            <div className="relative">
-              <div className="bg-[#231F20] pt-8 md:pt-12 pb-12 md:pb-16 px-6">
-                <h1 className="text-3xl md:text-4xl font-bold text-[#7B85B8] mb-4">
-                  Henrietta
-                </h1>
-                <p className="text-lg md:text-xl text-gray-200 leading-relaxed">
-                  Explore how and why we're creating infrastructure for patient-owned health data. Choose what interests you.
-                </p>
-              </div>
-              
-              <div 
-                className="absolute inset-x-0 pointer-events-none"
-                style={{
-                  bottom: '-120px',
-                  height: '120px',
-                  background: 'linear-gradient(to bottom, #231F20 0%, #231F20 10%, transparent 100%)'
-                }}
-              />
-            </div>
+        {/* Header - Simpler, no container box */}
+        <div className="relative z-20 pt-12 pb-16 md:pt-16 md:pb-20">
+          <div className="max-w-3xl mx-auto px-6">
+            <h1 className="text-3xl md:text-4xl font-bold text-[#7B85B8] mb-4">
+              Henrietta
+            </h1>
+            <p className="text-lg md:text-xl text-gray-200 leading-relaxed">
+              Explore how and why we're creating infrastructure for patient-owned health data. Choose what interests you.
+            </p>
           </div>
         </div>
         
+        {/* Doors Content */}
         <div className="relative z-10">
-          <div className="max-w-3xl mx-auto px-6 pt-20 md:pt-24 pb-12">
+          <div className="max-w-3xl mx-auto px-6 pb-12">
             <div className="space-y-2">
               {doorContent.map((door, index) => (
                 <Door
