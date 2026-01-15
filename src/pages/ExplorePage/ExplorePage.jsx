@@ -31,7 +31,7 @@ const ExplorePage = () => {
       <Navigation onJoinRegistry={openRegistry} />
       
       <div className="relative flex-1 bg-[#210606]">
-        {/* Background Pattern - Fixed height to prevent scaling */}
+        {/* Background Pattern - Limited height to not go past footer */}
         <div 
           className="absolute top-0 left-0 right-0"
           style={{
@@ -39,7 +39,8 @@ const ExplorePage = () => {
             backgroundSize: window.innerWidth < 768 ? 'auto 45%' : 'contain',
             backgroundPosition: 'top center',
             backgroundRepeat: 'repeat',
-            height: '300vh', // Large fixed height that won't change
+            height: '250vh', // Reduced from 300vh
+            maxHeight: '100%', // Won't extend beyond parent container
             pointerEvents: 'none'
           }}
         />
