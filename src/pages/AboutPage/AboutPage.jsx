@@ -3,19 +3,6 @@ import { Navigation, Footer, RegistryModal } from '../../components';
 import { useRegistry } from '../../hooks';
 import aboutNameBackground from '../../assets/about-name-background.svg';
 
-/**
- * AboutPage - Explanation of the name "Henrietta"
- * 
- * Design intent: Uses a softened structural field to signal care and 
- * continuity without narrative or decoration. Pattern is architectural,
- * not commemorative. Never reuse this pattern elsewhere.
- * 
- * Features:
- * - Ceremonial topographic pattern in margins only
- * - White card-on-field composition for text clarity
- * - Pattern fades near card for breathing room
- * - Tighter corners for architectural restraint
- */
 const AboutPage = () => {
   const {
     showRegistry,
@@ -33,8 +20,7 @@ const AboutPage = () => {
       className="min-h-screen flex flex-col"
       style={{
         backgroundImage: `url(${aboutNameBackground})`,
-        // Mobile: smaller scale to match desktop visibility
-        backgroundSize: window.innerWidth < 768 ? '150%' : 'cover',
+        backgroundSize: window.innerWidth < 768 ? '200%' : 'cover',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
         backgroundAttachment: 'fixed'
@@ -43,7 +29,6 @@ const AboutPage = () => {
       <Navigation onJoinRegistry={openRegistry} />
       
       <main className="flex-1 flex items-center justify-center px-6 py-12 md:py-20 relative">
-        {/* Pattern fade mask - creates breathing room around card */}
         <div 
           className="absolute inset-0 pointer-events-none"
           style={{
@@ -51,7 +36,6 @@ const AboutPage = () => {
           }}
         />
         
-        {/* White content container - smaller on mobile to show more pattern */}
         <div className="bg-white rounded-md max-w-2xl w-full px-6 md:px-12 py-8 md:py-12 relative z-10 mx-4">
           <h1 className="text-2xl md:text-4xl font-bold text-gray-900 mb-6 md:mb-8">
             About the Name
@@ -115,7 +99,6 @@ const AboutPage = () => {
       
       <Footer />
 
-      {/* Registry Modal */}
       <RegistryModal
         show={showRegistry}
         step={registryStep}

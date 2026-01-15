@@ -30,21 +30,18 @@ const ExplorePage = () => {
     <div className="min-h-screen flex flex-col">
       <Navigation onJoinRegistry={openRegistry} />
       
-      {/* Doors Section with Pattern Background */}
       <div className="relative flex-1 bg-[#210606]">
-        {/* Background Pattern - Larger on mobile to match desktop visibility */}
         <div 
           className="absolute inset-0 w-full h-full"
           style={{
             backgroundImage: `url(${exploreBackground})`,
-            backgroundSize: window.innerWidth < 768 ? 'auto 200%' : 'contain',
+            backgroundSize: window.innerWidth < 768 ? 'auto 150%' : 'contain',
             backgroundPosition: 'top center',
             backgroundRepeat: 'repeat',
             minHeight: '100%'
           }}
         />
         
-        {/* Top Gradient - From navbar down */}
         <div 
           className="absolute inset-x-0 top-0 pointer-events-none z-10"
           style={{
@@ -53,11 +50,9 @@ const ExplorePage = () => {
           }}
         />
         
-        {/* Hero Section - Balanced padding */}
         <div className="relative z-20">
           <div className="max-w-4xl mx-auto px-8 md:px-12">
             <div className="relative">
-              {/* Solid background box - More balanced padding */}
               <div className="bg-[#231F20] pt-8 md:pt-12 pb-12 md:pb-16 px-6">
                 <h1 className="text-3xl md:text-4xl font-bold text-[#7B85B8] mb-4">
                   Henrietta
@@ -67,7 +62,6 @@ const ExplorePage = () => {
                 </p>
               </div>
               
-              {/* Gradient overlay */}
               <div 
                 className="absolute inset-x-0 pointer-events-none"
                 style={{
@@ -80,7 +74,6 @@ const ExplorePage = () => {
           </div>
         </div>
         
-        {/* Doors Content - Moderate spacing */}
         <div className="relative z-10">
           <div className="max-w-3xl mx-auto px-6 pt-20 md:pt-24 pb-12">
             <div className="space-y-2">
@@ -100,7 +93,6 @@ const ExplorePage = () => {
             </div>
           </div>
 
-          {/* Footer */}
           <div className="mt-16 pt-8">
             <Footer isDark={true} />
           </div>
