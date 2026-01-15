@@ -10,13 +10,13 @@ import heroBackground from '../../assets/hero-background.svg';
 const Hero = ({ onJoinRegistry, onUnderstandWhy }) => {
   return (
     <div className="relative min-h-screen overflow-hidden">
-      {/* Background Layer: Medical Silhouette Pattern - Match desktop density */}
+      {/* Background Layer: Medical Silhouette Pattern - Slightly larger for prominence */}
       <div 
         className="absolute inset-0 w-full h-full"
         style={{
           backgroundImage: `url(${heroBackground})`,
-          // Mobile: auto height, 200% width to show multiple heads, Desktop: contain with repeat
-          backgroundSize: window.innerWidth < 768 ? 'auto 100%' : 'contain',
+          // Mobile: auto width, 150% height for more prominent heads, Desktop: contain with repeat
+          backgroundSize: window.innerWidth < 768 ? 'auto 150%' : 'contain',
           backgroundPosition: 'top center',
           backgroundRepeat: window.innerWidth < 768 ? 'repeat-x' : 'repeat-y',
           minHeight: '100%'
