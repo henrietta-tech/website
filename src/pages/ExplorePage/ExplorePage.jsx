@@ -31,15 +31,16 @@ const ExplorePage = () => {
       <Navigation onJoinRegistry={openRegistry} />
       
       <div className="relative flex-1 bg-[#210606]">
-        {/* Background Pattern - Back to absolute positioning */}
+        {/* Background Pattern - Fixed height to prevent scaling */}
         <div 
-          className="absolute inset-0 w-full h-full"
+          className="absolute top-0 left-0 right-0"
           style={{
             backgroundImage: `url(${exploreBackground})`,
             backgroundSize: window.innerWidth < 768 ? 'auto 45%' : 'contain',
             backgroundPosition: 'top center',
             backgroundRepeat: 'repeat',
-            backgroundAttachment: 'scroll'
+            height: '300vh', // Large fixed height that won't change
+            pointerEvents: 'none'
           }}
         />
         
