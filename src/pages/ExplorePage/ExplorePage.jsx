@@ -36,7 +36,7 @@ const ExplorePage = () => {
           className="absolute top-0 left-0 right-0"
           style={{
             backgroundImage: `url(${exploreBackground})`,
-            backgroundSize: window.innerWidth < 768 ? 'auto 45%' : 'contain',
+            backgroundSize: window.innerWidth < 768 ? 'auto 40%' : 'contain',
             backgroundPosition: 'top center',
             backgroundRepeat: 'repeat',
             height: '250vh',
