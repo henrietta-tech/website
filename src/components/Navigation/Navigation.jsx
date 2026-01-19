@@ -10,7 +10,7 @@ const Navigation = ({ onJoinRegistry }) => {
   const isDarkPage = location.pathname === '/statement' || location.pathname === '/explore';
   
   return (
-    <nav className={isDarkPage ? "bg-[#231F20] border-b border-[#BFCEEA]/40" : "bg-[#BFCEEA]"}>
+    <nav className={isDarkPage ? "bg-[#231F20] border-b border-[#8194D5]/40" : "bg-[#8194D5]"}>
       <div className="max-w-3xl mx-auto px-6 py-4 flex items-center justify-between">
         <Link 
           to="/" 
