@@ -28,16 +28,16 @@ export const doorContent = [
   }
 },
   {
-    id: 'dpc',
-    title: 'Why Direct Primary Care Matters',
-    summary: 'Direct Primary Care gets the relationship right. Time, continuity, prevention, without insurance intermediaries.',
-    content: {
-      paragraphs: [
-        { text: 'Direct Primary Care creates space for time, continuity, prevention, and long-term thinking, not just responses to problems.' },
-        { text: 'Instead of insurance billing, people work directly with a primary care clinician through a simple, predictable membership. That separation keeps care focused, costs transparent, and decisions grounded in the relationship, not reimbursement rules.' }
-      ]
-    }
-  },
+  id: 'dpc',
+  title: 'Why Direct Primary Care Matters',
+  summary: 'Direct Primary Care gets the relationship right. Time, continuity, and prevention without insurance intermediaries.',
+  content: {
+    paragraphs: [
+      { text: 'Direct Primary Care creates space for time, continuity, prevention, and long-term thinking, not just responses to problems.' },
+      { text: 'Instead of insurance billing, people work directly with a primary care clinician through a simple, predictable membership. That separation keeps care focused, costs transparent, and decisions grounded in the relationship, not reimbursement rules.' }
+    ]
+  }
+},
   {
     id: 'gap',
     title: 'The Gap Henrietta Exists to Fill',
