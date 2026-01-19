@@ -14,19 +14,19 @@ export const doorContent = [
     }
   },
   {
-    id: 'problem',
-    title: 'You\'re Not the Problem',
-    summary: 'If you feel like you\'re always reacting instead of building ahead, there\'s a reason.',
-    content: {
-      paragraphs: [
-        { text: 'That pattern didn\'t end. Systems designed to move people through without really holding onto them.' },
-        { text: 'When something changes, pieces get left behind, and you\'re expected to pick them up yourself. Sometimes that includes a new problem to manage, or a cost you didn\'t choose.' },
-        { text: 'Over time, this starts to feel normal. Care becomes something you respond to, instead of something you build ahead of time.' },
-        { text: 'So people adapt. For many, health becomes something they manage quietly through routines, habits, and constant self-adjustment, outside a system that feels reactive, expensive, or misaligned.' },
-        { text: 'It doesn\'t have to be this isolated.', weight: 'medium' }
-      ]
-    }
-  },
+  id: 'problem',
+  title: 'You\'re Not the Problem',
+  summary: 'If you feel like you\'re always responding to problems instead of preventing them, there\'s a reason.',
+  content: {
+    paragraphs: [
+      { text: 'Systems haven\'t changed as much as they should have. They\'re still designed to move people through without really holding onto them.' },
+      { text: 'When something changes, pieces get left behind, and you\'re expected to pick them up yourself. Sometimes that includes a new problem to manage, or a cost you didn\'t choose.' },
+      { text: 'Over time, this starts to feel normal. Care becomes something you respond to, instead of something you maintain ahead of time.' },
+      { text: 'People adapt. For many, health becomes something they manage quietly through routines, habits, and constant self-adjustment, outside a system that feels reactive, expensive, or misaligned.' },
+      { text: 'It doesn\'t have to be this isolated.', weight: 'medium' }
+    ]
+  }
+},
   {
     id: 'dpc',
     title: 'Why Direct Primary Care Matters',
