@@ -54,18 +54,18 @@ export const doorContent = [
   {
     id: 'who',
     title: 'Who This Is For',
-    summary: 'For people who take an active role in their health. Not waiting for crisis, building over time.',
+    summary: 'For people who take an active role in their health. Not waiting for a crisis, but building over time.',
     content: {
       paragraphs: [
         { text: 'Henrietta is being built for people who take an active role in their health, regardless of where they\'re starting from.' },
-        { text: 'Not waiting for crisis. Not reacting to problems after they appear. Building and maintaining over time.' },
+        { text: 'Not waiting for a crisis. Not reacting to problems after they appear. But building and maintaining over time.' },
         { text: 'People who participate in decisions, relationships, and long-term thinking.' },
         { text: 'This isn\'t about being perfectly healthy. It\'s about being engaged:', weight: 'medium' }
       ],
       list: [
         'People who ask questions',
         'People who make intentional choices about their care',
-        'People who want to participate in shaping infrastructure, not just consume it',
+        'People who want to participate in shaping infrastructure, not just consuming it',
         'People who think in decades, not just doctor visits'
       ],
       closingParagraphs: [
