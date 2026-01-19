@@ -20,9 +20,9 @@ const AboutPage = () => {
       className="min-h-screen flex flex-col"
       style={{
         backgroundImage: `url(${aboutNameBackground})`,
-        backgroundSize: 'cover',
+        backgroundSize: window.innerWidth < 768 ? '80%' : 'cover',
         backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat',
+        backgroundRepeat: window.innerWidth < 768 ? 'repeat' : 'no-repeat',
         backgroundAttachment: 'fixed'
       }}
     >
