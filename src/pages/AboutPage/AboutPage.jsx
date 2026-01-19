@@ -28,7 +28,7 @@ const AboutPage = () => {
     >
       <Navigation onJoinRegistry={openRegistry} />
       
-      <main className="flex-1 flex items-center justify-center px-8 py-6 md:py-20 relative">
+      <main className="flex-1 flex items-center justify-center px-4 sm:px-6 md:px-8 py-6 md:py-20 relative">
         <div 
           className="absolute inset-0 pointer-events-none"
           style={{
@@ -37,7 +37,7 @@ const AboutPage = () => {
         />
         
         {/* Much narrower card on mobile */}
-        <div className="bg-white rounded-md w-full max-w-xs md:max-w-2xl px-4 md:px-12 py-5 md:py-12 relative z-10">
+        <div className="bg-white rounded-md w-full max-w-[20rem] sm:max-w-[22rem] md:max-w-2xl px-4 md:px-12 py-5 md:py-12 relative z-10">
           <h1 className="text-lg md:text-4xl font-bold text-gray-900 mb-3 md:mb-8">
             About the Name
           </h1>
