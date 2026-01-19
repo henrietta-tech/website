@@ -16,7 +16,7 @@ export const doorContent = [
   {
     id: 'problem',
     title: 'You\'re Not the Problem',
-    summary: 'Fragmentation makes it feel like control keeps slipping away. Systems move people through. They don\'t hold onto them.',
+    summary: 'If you feel like you\'re always reacting instead of building ahead, there\'s a reason.',
     content: {
       paragraphs: [
         { text: 'That pattern didn\'t end. Systems designed to move people through without really holding onto them.' },
@@ -34,7 +34,7 @@ export const doorContent = [
     content: {
       paragraphs: [
         { text: 'Direct Primary Care creates space for time, continuity, prevention, and long-term thinking, not just responses to problems.' },
-        { text: 'Instead of insurance billing, people work directly with a primary care clinician through a simple, predictable membership. That structure allows care to be built through trust, familiarity, and ongoing engagement.' }
+        { text: 'Instead of insurance billing, people work directly with a primary care clinician through a simple, predictable membership. That separation keeps care focused, costs transparent, and decisions grounded in the relationship, not reimbursement rules.' }
       ]
     }
   },
