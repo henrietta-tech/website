@@ -1,0 +1,9 @@
+# Supabase Edge Functions Configuration
+
+[functions.register]
+enabled = true
+verify_jwt = false  # Public endpoint - no auth required
+
+[functions.verify]
+enabled = true
+verify_jwt = false  # Public endpoint - accessed via email link

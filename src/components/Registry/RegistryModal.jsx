@@ -6,18 +6,24 @@ import RegistryStep3 from './RegistryStep3';
 
 /**
  * RegistryModal - Modal containing the multi-step registry form
- * @param {boolean} show - Whether to show the modal
- * @param {number} step - Current step (1, 2, or 3)
- * @param {Object} formData - Form data object
- * @param {Function} onClose - Callback to close modal
- * @param {Function} onUpdate - Callback to update form data
- * @param {Function} onStep2 - Callback to advance to step 2
- * @param {Function} onComplete - Callback when registry is completed
+ * 
+ * Props:
+ * - show: whether to show the modal
+ * - step: current step (1, 2, or 3)
+ * - formData: form data object
+ * - isSubmitting: loading state during submission
+ * - error: error message from submission
+ * - onClose: callback to close modal
+ * - onUpdate: callback to update form data
+ * - onStep2: callback to advance to step 2
+ * - onComplete: callback when registry is completed
  */
 const RegistryModal = ({ 
   show, 
   step, 
   formData, 
+  isSubmitting,
+  error,
   onClose, 
   onUpdate, 
   onStep2, 
@@ -34,6 +40,13 @@ const RegistryModal = ({
     }
   };
 
+  // Prevent closing while submitting
+  const handleClose = () => {
+    if (!isSubmitting) {
+      onClose();
+    }
+  };
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
       <div className="bg-white max-w-lg w-full max-h-[90vh] overflow-y-auto">
@@ -42,8 +55,11 @@ const RegistryModal = ({
             {getTitle()}
           </h2>
           <button
-            onClick={onClose}
-            className="text-gray-400 hover:text-gray-600"
+            onClick={handleClose}
+            disabled={isSubmitting}
+            className={`text-gray-400 hover:text-gray-600 ${
+              isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
+            }`}
           >
             <X className="w-6 h-6" />
           </button>
@@ -63,6 +79,8 @@ const RegistryModal = ({
               formData={formData}
               onUpdate={onUpdate}
               onComplete={onComplete}
+              isSubmitting={isSubmitting}
+              error={error}
             />
           )}
 

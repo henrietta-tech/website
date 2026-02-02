@@ -2,12 +2,16 @@ import React from 'react';
 import { registryContent } from '../../constants/doorContent';
 
 /**
- * RegistryStep2 - Second step of registry form (optional questions)
- * @param {Object} formData - Current form data
- * @param {Function} onUpdate - Callback to update form data
- * @param {Function} onComplete - Callback when complete is clicked
+ * RegistryStep2 - Optional questions (DPC status, contact preference)
+ * 
+ * Props:
+ * - formData: current form state
+ * - onUpdate: update form field
+ * - onComplete: submit and finish registration
+ * - isSubmitting: loading state
+ * - error: error message from submission
  */
-const RegistryStep2 = ({ formData, onUpdate, onComplete }) => {
+const RegistryStep2 = ({ formData, onUpdate, onComplete, isSubmitting, error }) => {
   const { step2 } = registryContent;
 
   return (
@@ -36,6 +40,7 @@ const RegistryStep2 = ({ formData, onUpdate, onComplete }) => {
                     checked={formData[question.name] === option}
                     onChange={(e) => onUpdate(question.name, e.target.value)}
                     className="w-4 h-4"
+                    disabled={isSubmitting}
                   />
                   <span className="text-gray-700">{option}</span>
                 </label>
@@ -48,22 +53,36 @@ const RegistryStep2 = ({ formData, onUpdate, onComplete }) => {
               onChange={(e) => onUpdate(question.name, e.target.value)}
               className="w-full px-4 py-3 border border-gray-300 focus:border-black focus:ring-1 focus:ring-black outline-none transition-colors"
               placeholder={question.placeholder}
+              disabled={isSubmitting}
             />
           )}
         </div>
       ))}
 
+      {/* Error display */}
+      {error && (
+        <div className="p-3 bg-red-50 border border-red-200 text-red-700 text-sm">
+          {error}
+        </div>
+      )}
+
       <div className="flex flex-col gap-3 pt-4">
         <button
           onClick={onComplete}
-          className="w-full bg-black text-white px-6 py-3 font-medium hover:bg-gray-800 transition-colors"
+          disabled={isSubmitting}
+          className={`w-full px-6 py-3 font-medium transition-colors ${
+            isSubmitting
+              ? 'bg-gray-400 text-gray-200 cursor-not-allowed'
+              : 'bg-black text-white hover:bg-gray-800'
+          }`}
         >
-          Complete
+          {isSubmitting ? 'Submitting...' : 'Complete'}
         </button>
         
         <button
           onClick={onComplete}
-          className="w-full text-gray-500 text-sm hover:text-gray-700 transition-colors py-2"
+          disabled={isSubmitting}
+          className="w-full text-gray-500 text-sm hover:text-gray-700 transition-colors py-2 disabled:opacity-50"
         >
           Skip and complete registration
         </button>

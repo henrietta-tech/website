@@ -2,45 +2,44 @@ import React from 'react';
 import { registryContent } from '../../constants/doorContent';
 
 /**
- * RegistryStep3 - Confirmation step after registry completion
- * @param {Function} onClose - Callback to close registry modal
+ * RegistryStep3 - Confirmation screen
+ * 
+ * Shows after successful registration.
+ * Mentions email verification.
  */
 const RegistryStep3 = ({ onClose }) => {
   const { step3 } = registryContent;
 
   return (
-    <div className="space-y-6">
-      <div className="text-center py-8">
-        <div className="text-6xl mb-4">✓</div>
-        <p className="text-xl font-medium text-gray-900 mb-4">{step3.title}</p>
-      </div>
-
-      <div className="space-y-4 text-gray-700 leading-relaxed">
-        {step3.content.paragraphs.map((para, index) => (
-          <p key={index}>{para}</p>
-        ))}
-        
-        <div className="flex flex-col sm:flex-row gap-3 py-4">
-          {step3.content.links.map((link, index) => (
-            <a
-              key={index}
-              href={link.href}
-              className="flex-1 border-2 border-gray-300 text-gray-700 px-4 py-3 text-center font-medium hover:bg-gray-50 transition-colors"
-            >
-              {link.text}
-            </a>
-          ))}
+    <div className="text-center py-4">
+      <div className="mb-6">
+        <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+          </svg>
         </div>
-        
-        <p className="text-center text-gray-600">{step3.content.closing}</p>
       </div>
 
-      <button
-        onClick={onClose}
-        className="w-full bg-black text-white px-6 py-3 font-medium hover:bg-gray-800 transition-colors mt-6"
-      >
-        Close
-      </button>
+      <div className="space-y-4 text-gray-600">
+        <p className="font-medium text-gray-900">
+          Check your email
+        </p>
+        <p>
+          We've sent you a verification link. Click it to confirm your registration.
+        </p>
+        <p className="text-sm">
+          {step3.content.paragraphs[0]}
+        </p>
+      </div>
+
+      <div className="mt-8 pt-6 border-t border-gray-100">
+        <button
+          onClick={onClose}
+          className="text-gray-500 hover:text-gray-700 text-sm"
+        >
+          Close
+        </button>
+      </div>
     </div>
   );
 };
