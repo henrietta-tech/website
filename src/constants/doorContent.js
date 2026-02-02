@@ -77,7 +77,7 @@ export const doorContent = [
       paragraphs: [
         {
           text:
-            'When a DPC practice closes, when a doctor retires, when someone moves to a new city, the relationship can persist, but the infrastructure often doesn't.'
+            "When a DPC practice closes, when a doctor retires, when someone moves to a new city, the relationship can persist, but the infrastructure often doesn't."
         },
         { text: 'Health information fragments. Continuity breaks. People start over.' },
         {
