@@ -3,7 +3,7 @@ import { registryContent } from '../../constants/doorContent';
 import { validate } from '../../services/registryService';
 
 /**
- * RegistryStep1 - Email + ZIP collection
+ * RegistryStep1 - First name (optional) + Email + ZIP collection
  * 
  * Includes honeypot field for basic bot detection.
  * Validates on client for UX (server validates for security).
@@ -54,11 +54,14 @@ const RegistryStep1 = ({ formData, onUpdate, onSubmit }) => {
             >
               {field.label}
             </label>
+            {field.hint && (
+              <p className="text-sm text-gray-500 mb-2">{field.hint}</p>
+            )}
             <input
               id={field.name}
               type={field.type}
               required={field.required}
-              value={formData[field.name]}
+              value={formData[field.name] || ''}
               onChange={(e) => handleChange(field.name, e.target.value)}
               className={`w-full px-4 py-3 border outline-none transition-colors ${
                 errors[field.name] 

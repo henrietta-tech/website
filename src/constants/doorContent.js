@@ -77,7 +77,7 @@ export const doorContent = [
       paragraphs: [
         {
           text:
-            'When a DPC practice closes, when a doctor retires, when someone moves to a new city, the relationship can persist, but the infrastructure often doesn’t.'
+            'When a DPC practice closes, when a doctor retires, when someone moves to a new city, the relationship can persist, but the infrastructure often doesn't.'
         },
         { text: 'Health information fragments. Continuity breaks. People start over.' },
         {
@@ -193,6 +193,14 @@ export const registryContent = {
     description:
       "We're not collecting medical information. This helps us understand where interest exists and whether you want to stay informed.",
     fields: [
+      {
+        name: 'firstName',
+        label: 'First name',
+        type: 'text',
+        placeholder: '',
+        required: false,
+        hint: 'So we can speak to you like a person.'
+      },
       {
         name: 'email',
         label: 'Email',

@@ -1,34 +1,21 @@
 // Supabase Edge Function: register
 // Deploy: supabase functions deploy register
-//
-// What this does:
-// 1. Validates input
-// 2. Rate limits by IP
-// 3. Catches honeypot bots
-// 4. Inserts contact
-// 5. Sends verification email
-//
-// What this doesn't do:
-// - Fingerprinting (add if you see abuse)
-// - Event sourcing (overkill for now)
-// - Encrypted storage (add at 1k+ contacts)
 
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!;
 const SUPABASE_SERVICE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY')!;
+const SITE_URL = Deno.env.get('SITE_URL') || 'https://henriettatech.com';
 
-// Rate limit: 5 submissions per IP per hour
 const RATE_LIMIT = 5;
 
-// Disposable email domains (expand as needed)
 const DISPOSABLE = new Set([
   'tempmail.com', 'throwaway.com', 'mailinator.com', '10minutemail.com',
   'guerrillamail.com', 'sharklasers.com', 'yopmail.com', 'maildrop.cc'
 ]);
 
-// Hash prefix must match schema: 'henrietta:' + email
 const HASH_PREFIX = 'henrietta:';
 
 async function hashEmail(email: string): Promise<string> {
@@ -41,7 +28,6 @@ async function hashEmail(email: string): Promise<string> {
 }
 
 serve(async (req) => {
-  // CORS
   if (req.method === 'OPTIONS') {
     return new Response(null, {
       headers: {
@@ -58,15 +44,15 @@ serve(async (req) => {
     const body = await req.json();
     const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
 
-    // ===== HONEYPOT =====
-    // If bot filled the hidden field, pretend success
+    // Honeypot
     if (body.website) {
       return success();
     }
 
-    // ===== VALIDATION =====
+    // Validation
     const email = body.email?.toLowerCase().trim();
     const zip = body.zipCode?.trim();
+    const firstName = body.firstName?.trim() || null;
 
     if (!email || !zip) {
       return error('Email and ZIP code are required', 400);
@@ -85,7 +71,7 @@ serve(async (req) => {
       return error('Please use a permanent email address', 400);
     }
 
-    // ===== RATE LIMIT =====
+    // Rate limit
     const { count } = await supabase
       .from('registry_rate_limits')
       .select('*', { count: 'exact', head: true })
@@ -96,33 +82,33 @@ serve(async (req) => {
       return error('Too many requests. Try again later.', 429);
     }
 
-    // Log this attempt
     await supabase.from('registry_rate_limits').insert({ ip_address: ip });
 
-    // ===== CHECK DUPLICATE (using hash, not raw email) =====
+    // Check duplicate
     const emailHash = await hashEmail(email);
     
     const { data: existing } = await supabase
       .from('registry_contacts')
-      .select('id, email_verified')
+      .select('id, email_verified, first_name')
       .eq('email_hash', emailHash)
       .single();
 
     if (existing) {
-      // Already exists - resend verification if unverified
       if (!existing.email_verified) {
-        await sendVerificationEmail(supabase, existing.id, email);
+        await sendVerificationEmail(supabase, existing.id, email, existing.first_name);
       }
-      return success(); // Don't reveal duplicate
+      return success();
     }
 
-    // ===== INSERT =====
+    // Insert
     const wantsEmail = body.contactPreference?.toLowerCase() === 'yes';
 
     const { data: contact, error: insertError } = await supabase
       .from('registry_contacts')
       .insert({
         email,
+        email_hash: emailHash,
+        first_name: firstName,
         zip_code: zip,
         dpc_status: normalize(body.dpcStatus, ['yes', 'no'], 'unsure'),
         contact_preference: normalize(body.contactPreference, ['yes', 'no'], 'later'),
@@ -141,8 +127,8 @@ serve(async (req) => {
       return error('Registration failed. Please try again.', 500);
     }
 
-    // ===== SEND VERIFICATION EMAIL =====
-    await sendVerificationEmail(supabase, contact.id, email, contact.verification_token);
+    // Send verification email
+    await sendVerificationEmail(supabase, contact.id, email, firstName, contact.verification_token);
 
     return success();
 
@@ -152,7 +138,7 @@ serve(async (req) => {
   }
 });
 
-// ===== HELPERS =====
+// Helpers
 
 function success() {
   return new Response(
@@ -193,9 +179,9 @@ async function sendVerificationEmail(
   supabase: ReturnType<typeof createClient>,
   contactId: string,
   email: string,
+  firstName: string | null,
   token?: string
 ) {
-  // Get token if not provided
   if (!token) {
     const { data } = await supabase
       .from('registry_contacts')
@@ -207,38 +193,82 @@ async function sendVerificationEmail(
 
   if (!token) return;
 
-  // Update sent timestamp
   await supabase
     .from('registry_contacts')
     .update({ verification_sent_at: new Date().toISOString() })
     .eq('id', contactId);
 
-  // TODO: Replace with your email service (Resend, SendGrid, etc.)
-  // For now, just log it
-  const verifyUrl = `${Deno.env.get('SITE_URL') || 'https://henrietta.health'}/verify?token=${token}`;
-  
-  console.log(`[EMAIL] To: ${email}`);
-  console.log(`[EMAIL] Subject: Verify your Henrietta registration`);
-  console.log(`[EMAIL] Link: ${verifyUrl}`);
+  const verifyUrl = `${SITE_URL}/verify?token=${token}`;
+  const greeting = firstName ? `Hi ${firstName},` : 'Hi there,';
 
-  // Example with Resend (uncomment when ready):
-  // const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY');
-  // await fetch('https://api.resend.com/emails', {
-  //   method: 'POST',
-  //   headers: {
-  //     'Authorization': `Bearer ${RESEND_API_KEY}`,
-  //     'Content-Type': 'application/json'
-  //   },
-  //   body: JSON.stringify({
-  //     from: 'Henrietta <hello@henrietta.health>',
-  //     to: email,
-  //     subject: 'Verify your Henrietta registration',
-  //     html: `
-  //       <p>Thanks for joining the Henrietta registry.</p>
-  //       <p>Please verify your email by clicking the link below:</p>
-  //       <p><a href="${verifyUrl}">Verify my email</a></p>
-  //       <p>If you didn't sign up, you can ignore this email.</p>
-  //     `
-  //   })
-  // });
+  const html = `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #1a1a1a; max-width: 600px; margin: 0 auto; padding: 40px 20px;">
+  
+  <p style="font-size: 16px; margin-bottom: 24px;">${greeting}</p>
+  
+  <p style="font-size: 16px; margin-bottom: 24px;">Thanks for raising your hand.</p>
+  
+  <p style="font-size: 16px; margin-bottom: 24px;">Henrietta is building something different — healthcare infrastructure that belongs to patients, not platforms. We're moving slowly and carefully, connecting people who want to stand in the same corner for their health.</p>
+  
+  <p style="font-size: 16px; margin-bottom: 24px;">This isn't a mailing list. We won't sell your information or flood your inbox. We're asking for your consent to be part of this, because that's the whole point.</p>
+  
+  <p style="font-size: 16px; margin-bottom: 32px;">If this resonates, confirm you want to be part of it:</p>
+  
+  <a href="${verifyUrl}" style="display: inline-block; background-color: #6b5b95; color: white; text-decoration: none; padding: 14px 28px; border-radius: 6px; font-size: 16px; font-weight: 500;">Yes, I'm in</a>
+  
+  <p style="font-size: 14px; color: #666; margin-top: 40px;">If you didn't sign up, or this doesn't feel right, simply ignore this email. We won't contact you again.</p>
+  
+  <p style="font-size: 14px; color: #666; margin-top: 40px;">— Henrietta</p>
+
+</body>
+</html>
+  `.trim();
+
+  const text = `
+${greeting}
+
+Thanks for raising your hand.
+
+Henrietta is building something different — healthcare infrastructure that belongs to patients, not platforms. We're moving slowly and carefully, connecting people who want to stand in the same corner for their health.
+
+This isn't a mailing list. We won't sell your information or flood your inbox. We're asking for your consent to be part of this, because that's the whole point.
+
+If this resonates, confirm you want to be part of it:
+${verifyUrl}
+
+If you didn't sign up, or this doesn't feel right, simply ignore this email. We won't contact you again.
+
+— Henrietta
+  `.trim();
+
+  try {
+    const res = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${RESEND_API_KEY}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        from: 'Henrietta <hello@henriettatech.com>',
+        reply_to: 'hello@henriettatech.com',
+        to: email,
+        subject: 'An invitation to something different',
+        html,
+        text
+      })
+    });
+
+    if (!res.ok) {
+      const err = await res.text();
+      console.error('Resend error:', err);
+    }
+  } catch (e) {
+    console.error('Email send failed:', e);
+  }
 }

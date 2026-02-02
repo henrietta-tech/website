@@ -63,6 +63,7 @@ export async function submitRegistry(formData) {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
+        firstName: formData.firstName?.trim() || null,
         email: formData.email.trim(),
         zipCode: formData.zipCode.trim(),
         dpcStatus: formData.inDPC,

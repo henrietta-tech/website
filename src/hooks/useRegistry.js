@@ -10,6 +10,7 @@ export const useRegistry = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState(null);
   const [formData, setFormData] = useState({
+    firstName: '',
     email: '',
     zipCode: '',
     inDPC: '',
@@ -28,6 +29,7 @@ export const useRegistry = () => {
     setRegistryStep(1);
     setError(null);
     setFormData({
+      firstName: '',
       email: '',
       zipCode: '',
       inDPC: '',
