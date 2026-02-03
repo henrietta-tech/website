@@ -3,11 +3,11 @@ import HomePage from './pages/HomePage';
 import ExplorePage from './pages/ExplorePage';
 import StatementPage from './pages/StatementPage';
 import AboutPage from './pages/AboutPage';
+import VerifyPage from './pages/VerifyPage';
 import { ScrollToTop } from './components';
 
 /**
  * Main App component with routing
- * Four main routes: Home, Explore, Statement, About
  */
 function App() {
   return (
@@ -18,6 +18,7 @@ function App() {
         <Route path="/explore" element={<ExplorePage />} />
         <Route path="/statement" element={<StatementPage />} />
         <Route path="/about" element={<AboutPage />} />
+        <Route path="/verify" element={<VerifyPage />} />
       </Routes>
     </BrowserRouter>
   );

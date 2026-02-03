@@ -107,7 +107,6 @@ serve(async (req) => {
       .from('registry_contacts')
       .insert({
         email,
-        email_hash: emailHash,
         first_name: firstName,
         zip_code: zip,
         dpc_status: normalize(body.dpcStatus, ['yes', 'no'], 'unsure'),
@@ -255,8 +254,8 @@ If you didn't sign up, or this doesn't feel right, simply ignore this email. We 
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        from: 'Henrietta <hello@henriettatech.com>',
-        reply_to: 'hello@henriettatech.com',
+        from: 'Henrietta <hello@mail.henriettatech.com>',
+        reply_to: 'hello@mail.henriettatech.com',
         to: email,
         subject: 'An invitation to something different',
         html,
