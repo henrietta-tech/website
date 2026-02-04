@@ -58,7 +58,7 @@ const SuccessState = ({ firstName }) => (
     style={{ backgroundColor: '#7B85B8' }}
   >
     {/* Acknowledgment */}
-    <p className="text-white/80 text-lg font-medium mb-1">
+    <p className="text-white/80 text-xl font-medium mb-1">
       {firstName ? `${firstName}, you're in.` : "You're in."}
     </p>
     <p className="text-white/60 text-sm mb-10 leading-relaxed">
