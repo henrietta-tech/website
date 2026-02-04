@@ -20,7 +20,6 @@ const Hero = ({ onJoinRegistry, onUnderstandWhy }) => {
         className="absolute inset-0 w-full h-full"
         style={{
           backgroundImage: `url(${heroBackground})`,
-          // Mobile: auto width, 60% height with full repeat, Desktop: contain with repeat
           backgroundSize: window.innerWidth < 768 ? 'auto 60%' : 'contain',
           backgroundPosition: 'top center',
           backgroundRepeat: 'repeat',
@@ -35,11 +34,11 @@ const Hero = ({ onJoinRegistry, onUnderstandWhy }) => {
             {heroContent.title}<sup className="text-sm opacity-70 font-normal ml-1">™</sup>
           </h1>
           
-          {/* Pink Gradient Fade Line */}
+          {/* Lavender Gradient Fade Line */}
           <div 
             className="w-full h-1 mb-6"
             style={{
-              background: 'linear-gradient(to right, #C9A8FF 0%, rgba(255, 105, 180, 0) 100%)'
+              background: 'linear-gradient(to right, #C9A8FF 0%, rgba(201, 168, 255, 0) 100%)'
             }}
           />
           
@@ -80,7 +79,7 @@ const Hero = ({ onJoinRegistry, onUnderstandWhy }) => {
                 "
               >
                 Join the Registry
-                <span className="text-[#C9A8FF]">→</span>
+                <span className="text-[#F97AD7]">→</span>
               </button>
 
               {/* Secondary CTA */}

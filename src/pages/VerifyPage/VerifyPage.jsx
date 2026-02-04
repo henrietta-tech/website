@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
-import { Navigation, Footer } from '../../components';
 
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
 
@@ -35,79 +34,102 @@ const VerifyPage = () => {
     verify();
   }, [searchParams]);
 
+  if (state === 'success') {
+    return <SuccessState firstName={firstName} />;
+  }
+
   return (
-    <div className="min-h-screen flex flex-col bg-[#fafafa]">
-      <Navigation />
-      
-      <main className="flex-1 flex items-center justify-center px-6 py-16">
-        <div className="max-w-lg w-full text-center">
-          {state === 'loading' && <LoadingState />}
-          {state === 'success' && <SuccessState firstName={firstName} />}
-          {state === 'already_verified' && <AlreadyVerifiedState />}
-          {(state === 'expired' || state === 'not_found') && <ExpiredState />}
-          {(state === 'invalid' || state === 'error') && <ErrorState />}
-        </div>
-      </main>
-      
-      <Footer />
+    <div className="min-h-screen flex items-center justify-center bg-white px-6">
+      {state === 'loading' && <LoadingState />}
+      {state === 'already_verified' && <AlreadyVerifiedState />}
+      {(state === 'expired' || state === 'not_found') && <ExpiredState />}
+      {(state === 'invalid' || state === 'error') && <ErrorState />}
     </div>
   );
 };
 
 const LoadingState = () => (
-  <p className="text-gray-500">Verifying...</p>
+  <p className="text-gray-400">Verifying...</p>
 );
 
 const SuccessState = ({ firstName }) => (
-  <div className="space-y-8">
-    <div className="space-y-2">
-      <p className="text-lg text-[#2A3B47]">
+  <div 
+    className="min-h-screen flex flex-col items-center justify-center px-6 relative"
+    style={{ backgroundColor: '#7B85B8' }}
+  >
+    {/* Subtle vignette */}
+    <div 
+      className="absolute inset-0 pointer-events-none"
+      style={{
+        background: 'radial-gradient(ellipse at center, transparent 0%, rgba(0,0,0,0.08) 100%)'
+      }}
+    />
+    
+    {/* Content */}
+    <div className="relative z-10 text-center">
+      {/* Acknowledgment */}
+      <p className="text-white/70 text-sm mb-1">
         {firstName ? `${firstName}, you're in.` : "You're in."}
       </p>
-      <p className="text-gray-600">We'll be careful with this.</p>
-    </div>
-    
-    <div className="py-12">
-      <h1 className="text-6xl md:text-7xl font-bold text-[#2A3B47] tracking-tight">
+      <p className="text-white/50 text-xs mb-12">
+        We'll be careful with this.
+      </p>
+      
+      {/* Henrietta */}
+      <h1 
+        className="font-bold text-white tracking-tight leading-none select-none"
+        style={{ fontSize: 'clamp(6rem, 32vw, 20rem)' }}
+      >
         Henrietta
       </h1>
-      <div 
-        className="w-48 h-1 mx-auto mt-4"
-        style={{ background: 'linear-gradient(to right, #E8D4FF 0%, transparent 100%)' }}
-      />
     </div>
     
-    <div className="space-y-4 text-sm text-gray-500">
-      <p>You won't hear from us often—only when there's something meaningful to share.</p>
-      <div className="flex justify-center gap-6 pt-4">
-        <Link to="/statement" className="hover:text-[#2A3B47] transition-colors">Statement of Use</Link>
-        <Link to="/explore" className="hover:text-[#2A3B47] transition-colors">Explore</Link>
+    {/* Reassurance + escape hatches - pushed to absolute bottom */}
+    <div className="absolute bottom-6 text-center px-6">
+      <p className="text-white/60 text-sm mb-8 max-w-md mx-auto">
+        You won't hear from us often—only when there's something meaningful to share.
+      </p>
+      
+      {/* Escape hatches - lower contrast, passive language */}
+      <div className="flex justify-center gap-6 text-xs text-white/30">
+        <Link to="/statement" className="hover:text-white/50 transition-colors">
+          Statement of Use
+        </Link>
+        <Link to="/" className="hover:text-white/50 transition-colors">
+          ← Return to Henrietta
+        </Link>
       </div>
     </div>
   </div>
 );
 
 const AlreadyVerifiedState = () => (
-  <div className="space-y-6">
-    <h1 className="text-2xl font-bold text-[#2A3B47]">You're already part of this.</h1>
-    <p className="text-gray-600">No action needed. We'll be in touch when there's something worth sharing.</p>
-    <Link to="/" className="inline-block text-sm text-gray-500 hover:text-[#2A3B47] transition-colors">← Back to Henrietta</Link>
+  <div className="text-center">
+    <p className="text-gray-600 mb-2">You're already part of this.</p>
+    <p className="text-sm text-gray-400 mb-6">No action needed.</p>
+    <Link to="/" className="text-sm text-[#7B85B8] hover:text-[#6A7399] transition-colors">
+      ← Return to Henrietta
+    </Link>
   </div>
 );
 
 const ExpiredState = () => (
-  <div className="space-y-6">
-    <h1 className="text-2xl font-bold text-[#2A3B47]">This link didn't work.</h1>
-    <p className="text-gray-600">It may have expired or already been used.</p>
-    <Link to="/" className="inline-block text-[#7B85B8] hover:text-[#6A7399] transition-colors">Rejoin the registry →</Link>
+  <div className="text-center">
+    <p className="text-gray-600 mb-2">This link didn't work.</p>
+    <p className="text-sm text-gray-400 mb-6">It may have expired or already been used.</p>
+    <Link to="/" className="text-sm text-[#7B85B8] hover:text-[#6A7399] transition-colors">
+      Rejoin the registry →
+    </Link>
   </div>
 );
 
 const ErrorState = () => (
-  <div className="space-y-6">
-    <h1 className="text-2xl font-bold text-[#2A3B47]">Something went wrong.</h1>
-    <p className="text-gray-600">Please try clicking the link again, or rejoin the registry.</p>
-    <Link to="/" className="inline-block text-[#7B85B8] hover:text-[#6A7399] transition-colors">Back to Henrietta →</Link>
+  <div className="text-center">
+    <p className="text-gray-600 mb-2">Something went wrong.</p>
+    <p className="text-sm text-gray-400 mb-6">Please try again.</p>
+    <Link to="/" className="text-sm text-[#7B85B8] hover:text-[#6A7399] transition-colors">
+      ← Return to Henrietta
+    </Link>
   </div>
 );
 
