@@ -54,51 +54,38 @@ const LoadingState = () => (
 
 const SuccessState = ({ firstName }) => (
   <div 
-    className="min-h-screen flex flex-col items-center justify-center px-6 relative"
+    className="min-h-screen flex flex-col items-center justify-center px-6"
     style={{ backgroundColor: '#7B85B8' }}
   >
-    {/* Subtle vignette */}
-    <div 
-      className="absolute inset-0 pointer-events-none"
-      style={{
-        background: 'radial-gradient(ellipse at center, transparent 0%, rgba(0,0,0,0.08) 100%)'
-      }}
-    />
+    {/* Acknowledgment */}
+    <p className="text-white/70 text-sm mb-1">
+      {firstName ? `${firstName}, you're in.` : "You're in."}
+    </p>
+    <p className="text-white/50 text-xs mb-10">
+      We'll be careful with this.
+    </p>
     
-    {/* Content */}
-    <div className="relative z-10 text-center">
-      {/* Acknowledgment */}
-      <p className="text-white/70 text-sm mb-1">
-        {firstName ? `${firstName}, you're in.` : "You're in."}
-      </p>
-      <p className="text-white/50 text-xs mb-12">
-        We'll be careful with this.
-      </p>
-      
-      {/* Henrietta */}
-      <h1 
-        className="font-bold text-white tracking-tight leading-none select-none"
-        style={{ fontSize: 'clamp(6rem, 32vw, 20rem)' }}
-      >
-        Henrietta
-      </h1>
-    </div>
+    {/* Henrietta - contained, centered, breathing */}
+    <h1 
+      className="font-bold text-white tracking-tight leading-none select-none text-center"
+      style={{ fontSize: 'clamp(4rem, 18vw, 10rem)' }}
+    >
+      Henrietta
+    </h1>
     
-    {/* Reassurance + escape hatches - pushed to absolute bottom */}
-    <div className="absolute bottom-6 text-center px-6">
-      <p className="text-white/60 text-sm mb-8 max-w-md mx-auto">
-        You won't hear from us often—only when there's something meaningful to share.
-      </p>
-      
-      {/* Escape hatches - lower contrast, passive language */}
-      <div className="flex justify-center gap-6 text-xs text-white/30">
-        <Link to="/statement" className="hover:text-white/50 transition-colors">
-          Statement of Use
-        </Link>
-        <Link to="/" className="hover:text-white/50 transition-colors">
-          ← Return to Henrietta
-        </Link>
-      </div>
+    {/* Reassurance */}
+    <p className="text-white/60 text-sm mt-12 mb-6 max-w-sm text-center">
+      You won't hear from us often—only when there's something meaningful to share.
+    </p>
+    
+    {/* Escape hatches */}
+    <div className="flex justify-center gap-6 text-xs text-white/30">
+      <Link to="/statement" className="hover:text-white/50 transition-colors">
+        Statement of Use
+      </Link>
+      <Link to="/" className="hover:text-white/50 transition-colors">
+        ← Return to Henrietta
+      </Link>
     </div>
   </div>
 );
