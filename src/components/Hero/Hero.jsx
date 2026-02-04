@@ -39,7 +39,7 @@ const Hero = ({ onJoinRegistry, onUnderstandWhy }) => {
           <div 
             className="w-full h-1 mb-6"
             style={{
-              background: 'linear-gradient(to right, #FF69B4 0%, rgba(255, 105, 180, 0) 100%)'
+              background: 'linear-gradient(to right, #C9A8FF 0%, rgba(255, 105, 180, 0) 100%)'
             }}
           />
           
@@ -80,7 +80,7 @@ const Hero = ({ onJoinRegistry, onUnderstandWhy }) => {
                 "
               >
                 Join the Registry
-                <span className="text-[#FF69B4]">→</span>
+                <span className="text-[#C9A8FF]">→</span>
               </button>
 
               {/* Secondary CTA */}
