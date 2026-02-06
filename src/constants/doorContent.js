@@ -232,7 +232,8 @@ export const registryContent = {
         name: 'contactPreference',
         label: 'Would you like to be contacted by DPC practices in your area?',
         type: 'radio',
-        options: ['Yes', 'No', 'Maybe later']
+        options: ['Yes', 'No', 'Maybe later'],
+        hint: 'DPC is still growing. It may not be in your area yet. Your interest helps us know where to focus.'
       },
       {
         name: 'referralSource',

@@ -3,23 +3,16 @@ import { registryContent } from '../../constants/doorContent';
 
 /**
  * RegistryStep2 - Optional questions (DPC status, contact preference)
- * 
- * Props:
- * - formData: current form state
- * - onUpdate: update form field
- * - onComplete: submit and finish registration
- * - isSubmitting: loading state
- * - error: error message from submission
  */
 const RegistryStep2 = ({ formData, onUpdate, onComplete, isSubmitting, error }) => {
   const { step2 } = registryContent;
-
+  
   return (
     <div className="space-y-6">
       <p className="text-gray-600 text-sm">
         {step2.description}
       </p>
-
+      
       {step2.questions.map((question) => (
         <div key={question.name}>
           <label className="block text-sm font-medium text-gray-700 mb-3">
@@ -45,6 +38,11 @@ const RegistryStep2 = ({ formData, onUpdate, onComplete, isSubmitting, error }) 
                   <span className="text-gray-700">{option}</span>
                 </label>
               ))}
+              {question.hint && (
+                <p className="text-gray-400 text-sm mt-2 italic pl-7">
+                  {question.hint}
+                </p>
+              )}
             </div>
           ) : (
             <input
@@ -58,14 +56,13 @@ const RegistryStep2 = ({ formData, onUpdate, onComplete, isSubmitting, error }) 
           )}
         </div>
       ))}
-
-      {/* Error display */}
+      
       {error && (
         <div className="p-3 bg-red-50 border border-red-200 text-red-700 text-sm">
           {error}
         </div>
       )}
-
+      
       <div className="flex flex-col gap-3 pt-4">
         <button
           onClick={onComplete}
