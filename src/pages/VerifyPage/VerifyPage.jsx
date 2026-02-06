@@ -4,37 +4,40 @@ import { useSearchParams, Link } from 'react-router-dom';
 const VerifyPage = () => {
   const [searchParams] = useSearchParams();
   const status = searchParams.get('status');
+  const name = searchParams.get('name');
 
-  // Map status to component
   const states = {
-    success: SuccessState,
-    'already-verified': AlreadyVerifiedState,
-    expired: ExpiredState,
-    invalid: ErrorState,
-    error: ErrorState,
+    success: () => <SuccessState name={name} />,
+    'already-verified': () => <AlreadyVerifiedState />,
+    expired: () => <ExpiredState />,
+    invalid: () => <ErrorState />,
+    error: () => <ErrorState />,
   };
 
-  const StateComponent = states[status] || ErrorState;
+  const StateComponent = states[status] || states.error;
 
   return <StateComponent />;
 };
 
-const SuccessState = () => (
+const SuccessState = ({ name }) => (
   <div 
     className="min-h-screen flex flex-col items-center justify-center px-6"
     style={{ backgroundColor: '#7B85B8' }}
   >
-    <p className="text-white/80 text-xl font-medium mb-1">
-      You're in.
+    <p 
+      className="text-white font-bold mb-2"
+      style={{ fontSize: 'clamp(2rem, 8vw, 4rem)' }}
+    >
+      {name ? `${name}, you're in.` : "You're in."}
     </p>
-    <p className="text-white/60 text-sm mb-10 leading-relaxed">
+    <p className="text-white/60 text-lg mb-12 leading-relaxed">
       We'll be careful with this.
     </p>
     
     <h1 
-      className="font-bold text-white leading-none select-none text-center"
+      className="font-bold text-white/30 leading-none select-none text-center"
       style={{ 
-        fontSize: 'clamp(4.5rem, 22vw, 12rem)',
+        fontSize: 'clamp(4rem, 18vw, 10rem)',
         letterSpacing: '-0.02em'
       }}
     >

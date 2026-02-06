@@ -1,6 +1,4 @@
 // Supabase Edge Function: send-verification-reminders
-// Runs daily via pg_cron or external scheduler
-//
 // Deploy: supabase functions deploy send-verification-reminders
 
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
@@ -23,7 +21,6 @@ serve(async (req) => {
   const results = { reminders_sent: 0, deletions: 0, errors: [] as string[] };
 
   try {
-    // STEP 1: Send reminders to pending contacts
     const { data: needingReminders, error: queryError } = await supabase
       .rpc('get_contacts_needing_reminders');
 
@@ -68,7 +65,6 @@ serve(async (req) => {
       }
     }
 
-    // STEP 2: Delete expired unverified contacts
     const { data: forDeletion, error: deletionQueryError } = await supabase
       .rpc('get_contacts_for_deletion');
 
@@ -139,7 +135,7 @@ async function sendReminderEmail(
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        from: 'Henrietta <hello@henrietta.health>',
+        from: 'Henrietta <hello@mail.henriettatech.com>',
         to: email,
         subject,
         html,

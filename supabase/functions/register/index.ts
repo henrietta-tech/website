@@ -1,11 +1,5 @@
 // Supabase Edge Function: register
 // Deploy: supabase functions deploy register
-//
-// Handles new signups:
-//   1. Validates input
-//   2. Rate limits by IP
-//   3. Inserts into registry_contacts
-//   4. Sends verification email via Resend
 
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
@@ -13,19 +7,13 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!;
 const SUPABASE_SERVICE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
 const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY')!;
-const SITE_URL = Deno.env.get('SITE_URL') || 'https://henrietta.health';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
-// ============================================
-// MAIN HANDLER
-// ============================================
-
 serve(async (req) => {
-  // Handle CORS preflight
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
@@ -34,25 +22,19 @@ serve(async (req) => {
     const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
     const body = await req.json();
 
-    // ==========================================
-    // 1. VALIDATE INPUT
-    // ==========================================
-    
     const { 
       email, 
       firstName,
       zipCode, 
       dpcStatus, 
       contactPreference,
-      wantsUpdates,  // ← New field
       referralSource,
       utmSource,
       utmMedium,
       utmCampaign,
-      honeypot  // Bot trap
+      honeypot
     } = body;
 
-    // Honeypot check (silent fail)
     if (honeypot) {
       console.log('Honeypot triggered');
       return new Response(
@@ -61,7 +43,6 @@ serve(async (req) => {
       );
     }
 
-    // Required fields
     if (!email || !zipCode) {
       return new Response(
         JSON.stringify({ error: 'Email and ZIP code are required' }),
@@ -69,7 +50,6 @@ serve(async (req) => {
       );
     }
 
-    // Email format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       return new Response(
@@ -78,7 +58,6 @@ serve(async (req) => {
       );
     }
 
-    // ZIP format
     const zipRegex = /^\d{5}$/;
     if (!zipRegex.test(zipCode)) {
       return new Response(
@@ -87,10 +66,6 @@ serve(async (req) => {
       );
     }
 
-    // ==========================================
-    // 2. RATE LIMIT (5 per hour per IP)
-    // ==========================================
-    
     const clientIP = req.headers.get('x-forwarded-for')?.split(',')[0] || 'unknown';
     
     const { count: recentAttempts } = await supabase
@@ -106,16 +81,10 @@ serve(async (req) => {
       );
     }
 
-    // Log this attempt
     await supabase.from('registry_rate_limits').insert({ ip_address: clientIP });
 
-    // ==========================================
-    // 3. CHECK FOR EXISTING EMAIL
-    // ==========================================
-    
     const emailNormalized = email.toLowerCase().trim();
     
-    // Compute hash the same way Postgres does
     const encoder = new TextEncoder();
     const data = encoder.encode('henrietta:' + emailNormalized);
     const hashBuffer = await crypto.subtle.digest('SHA-256', data);
@@ -129,7 +98,6 @@ serve(async (req) => {
       .eq('email_hash', emailHash)
       .single();
 
-    // If exists and verified, silent success (don't reveal account exists)
     if (existing && existing.email_verified && !existing.deleted_at) {
       return new Response(
         JSON.stringify({ success: true }),
@@ -137,7 +105,6 @@ serve(async (req) => {
       );
     }
 
-    // If exists but unverified, update instead of insert (allow re-registration)
     if (existing && !existing.email_verified) {
       const { error: updateError } = await supabase
         .from('registry_contacts')
@@ -146,7 +113,6 @@ serve(async (req) => {
           zip_code: zipCode,
           dpc_status: dpcStatus || null,
           contact_preference: contactPreference || null,
-          wants_updates: wantsUpdates || false,
           email_consent: contactPreference === 'yes',
           email_consent_at: contactPreference === 'yes' ? new Date().toISOString() : null,
           referral_source: referralSource || null,
@@ -167,14 +133,12 @@ serve(async (req) => {
         throw updateError;
       }
 
-      // Get the new token
       const { data: updated } = await supabase
         .from('registry_contacts')
         .select('id, verification_token')
         .eq('id', existing.id)
         .single();
 
-      // Send verification email
       await sendVerificationEmail(updated.id, email, updated.verification_token, firstName, supabase);
 
       return new Response(
@@ -183,10 +147,6 @@ serve(async (req) => {
       );
     }
 
-    // ==========================================
-    // 4. INSERT NEW CONTACT
-    // ==========================================
-    
     const { data: newContact, error: insertError } = await supabase
       .from('registry_contacts')
       .insert({
@@ -195,7 +155,6 @@ serve(async (req) => {
         zip_code: zipCode,
         dpc_status: dpcStatus || null,
         contact_preference: contactPreference || null,
-        wants_updates: wantsUpdates || false,
         email_consent: contactPreference === 'yes',
         email_consent_at: contactPreference === 'yes' ? new Date().toISOString() : null,
         referral_source: referralSource || null,
@@ -207,7 +166,6 @@ serve(async (req) => {
       .single();
 
     if (insertError) {
-      // Duplicate (race condition) - silent success
       if (insertError.code === '23505') {
         return new Response(
           JSON.stringify({ success: true }),
@@ -218,10 +176,6 @@ serve(async (req) => {
       throw insertError;
     }
 
-    // ==========================================
-    // 5. SEND VERIFICATION EMAIL
-    // ==========================================
-    
     await sendVerificationEmail(newContact.id, email, newContact.verification_token, firstName, supabase);
 
     return new Response(
@@ -238,10 +192,6 @@ serve(async (req) => {
   }
 });
 
-// ============================================
-// SEND VERIFICATION EMAIL
-// ============================================
-
 async function sendVerificationEmail(
   contactId: string,
   email: string,
@@ -249,13 +199,12 @@ async function sendVerificationEmail(
   firstName: string | null,
   supabase: ReturnType<typeof createClient>
 ) {
-  // Update sent timestamp
   await supabase
     .from('registry_contacts')
     .update({ verification_sent_at: new Date().toISOString() })
     .eq('id', contactId);
 
-  const verifyUrl = `${SITE_URL}/api/verify?token=${token}`;
+  const verifyUrl = `${SUPABASE_URL}/functions/v1/verify-email?token=${token}`;
   const greeting = firstName ? `Hi ${firstName},` : 'Hi,';
 
   try {
@@ -266,41 +215,19 @@ async function sendVerificationEmail(
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        from: 'Henrietta <hello@henrietta.health>',
+        from: 'Henrietta <hello@mail.henriettatech.com>',
         to: email,
-        subject: "You're invited to help build something different",
+        subject: 'An invitation to something different',
         html: `
           <p>${greeting}</p>
-          
-          <p>You just signed up for the Henrietta registry — a patient-owned 
-          health data system that puts you in control.</p>
-          
-          <p>To confirm you want in, click below:</p>
-          
+          <p>You asked to be part of what we're building.</p>
+          <p>We don't take that lightly.</p>
           <p style="margin: 30px 0;">
-            <a href="${verifyUrl}" style="display: inline-block; padding: 14px 28px; 
-              background: #1a1a1a; color: white; text-decoration: none; 
-              border-radius: 4px; font-weight: 500;">
-              Verify my email
-            </a>
+            <a href="${verifyUrl}" style="display: inline-block; padding: 14px 28px; background: #1a1a1a; color: white; text-decoration: none; border-radius: 4px; font-weight: 500;">Verify my email</a>
           </p>
-          
-          <p>If you didn't sign up, just ignore this — we won't email you again.</p>
-          
-          <p>— The Henrietta team</p>
+          <p>— Henrietta</p>
         `,
-        text: `
-${greeting}
-
-You just signed up for the Henrietta registry — a patient-owned health data system that puts you in control.
-
-To confirm you want in, click here:
-${verifyUrl}
-
-If you didn't sign up, just ignore this — we won't email you again.
-
-— The Henrietta team
-        `,
+        text: `${greeting}\n\nYou asked to be part of what we're building.\n\nWe don't take that lightly.\n\nVerify your email: ${verifyUrl}\n\n— Henrietta`,
       }),
     });
 
@@ -310,6 +237,5 @@ If you didn't sign up, just ignore this — we won't email you again.
     }
   } catch (error) {
     console.error('Email send error:', error);
-    // Don't fail the registration if email fails
   }
 }

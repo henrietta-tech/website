@@ -1,14 +1,12 @@
 // Supabase Edge Function: verify-email
-// Handles verification link clicks and populates updates_opt_in
-//
-// Deploy: supabase functions deploy verify-email
+// Deploy: supabase functions deploy verify-email --no-verify-jwt
 
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!;
 const SUPABASE_SERVICE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
-const SITE_URL = Deno.env.get('SITE_URL') || 'https://henrietta.health';
+const SITE_URL = Deno.env.get('SITE_URL') || 'https://henriettatech.com';
 const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY');
 
 serve(async (req) => {
@@ -27,7 +25,6 @@ serve(async (req) => {
 
     const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
 
-    // 1. FIND THE CONTACT
     const { data: contact, error: findError } = await supabase
       .from('registry_contacts')
       .select('id, email, first_name, email_verified, deleted_at')
@@ -46,7 +43,6 @@ serve(async (req) => {
       return Response.redirect(`${SITE_URL}/verify?status=expired`, 302);
     }
 
-    // 2. MARK AS VERIFIED
     const { error: updateError } = await supabase
       .from('registry_contacts')
       .update({
@@ -61,7 +57,6 @@ serve(async (req) => {
       return Response.redirect(`${SITE_URL}/verify?status=error`, 302);
     }
 
-    // 3. ADD TO BULLETIN LIST (everyone who verifies)
     const emailNormalized = contact.email.toLowerCase().trim();
     
     await supabase
@@ -78,12 +73,13 @@ serve(async (req) => {
         ignoreDuplicates: true,
       });
 
-    // 4. SEND WELCOME EMAIL
     if (RESEND_API_KEY) {
       await sendWelcomeEmail(contact.email, contact.first_name);
     }
 
-    return Response.redirect(`${SITE_URL}/verify?status=success`, 302);
+    // Pass name in redirect
+    const nameParam = contact.first_name ? `&name=${encodeURIComponent(contact.first_name)}` : '';
+    return Response.redirect(`${SITE_URL}/verify?status=success${nameParam}`, 302);
 
   } catch (error) {
     console.error('Verification error:', error);
@@ -102,7 +98,7 @@ async function sendWelcomeEmail(email: string, firstName: string | null) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        from: 'Henrietta <hello@henrietta.health>',
+        from: 'Henrietta <hello@mail.henriettatech.com>',
         to: email,
         subject: "You're in",
         html: `
@@ -110,10 +106,9 @@ async function sendWelcomeEmail(email: string, firstName: string | null) {
           <p>Your email is verified. You're now part of the Henrietta registry.</p>
           <p>We'll reach out when something real happens—a pilot program, a research finding, a chance to shape what we're building.</p>
           <p>Until then, we're heads down working.</p>
-          <p>— Pedro</p>
-          <p style="color: #666; font-size: 12px; margin-top: 40px;">You can unsubscribe anytime by replying to this email.</p>
+          <p>— Henrietta</p>
         `,
-        text: `${greeting}\n\nYour email is verified. You're now part of the Henrietta registry.\n\nWe'll reach out when something real happens—a pilot program, a research finding, a chance to shape what we're building.\n\nUntil then, we're heads down working.\n\n— Pedro\n\nYou can unsubscribe anytime by replying to this email.`,
+        text: `${greeting}\n\nYour email is verified. You're now part of the Henrietta registry.\n\nWe'll reach out when something real happens—a pilot program, a research finding, a chance to shape what we're building.\n\nUntil then, we're heads down working.\n\n— Henrietta`,
       }),
     });
   } catch (error) {
