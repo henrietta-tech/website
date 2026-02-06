@@ -77,7 +77,6 @@ serve(async (req) => {
       await sendWelcomeEmail(contact.email, contact.first_name);
     }
 
-    // Pass name in redirect
     const nameParam = contact.first_name ? `&name=${encodeURIComponent(contact.first_name)}` : '';
     return Response.redirect(`${SITE_URL}/verify?status=success${nameParam}`, 302);
 
@@ -89,6 +88,8 @@ serve(async (req) => {
 
 async function sendWelcomeEmail(email: string, firstName: string | null) {
   const greeting = firstName ? `Hi ${firstName},` : 'Hi,';
+  const unsubscribeToken = btoa(email);
+  const unsubscribeUrl = `${SUPABASE_URL}/functions/v1/unsubscribe?token=${unsubscribeToken}`;
   
   try {
     await fetch('https://api.resend.com/emails', {
@@ -107,8 +108,11 @@ async function sendWelcomeEmail(email: string, firstName: string | null) {
           <p>We'll reach out when something real happens—a pilot program, a research finding, a chance to shape what we're building.</p>
           <p>Until then, we're heads down working.</p>
           <p>— Henrietta</p>
+          <p style="color: #999; font-size: 12px; margin-top: 40px;">
+            If this ever stops feeling relevant, you can <a href="${unsubscribeUrl}" style="color: #999;">step out here</a>.
+          </p>
         `,
-        text: `${greeting}\n\nYour email is verified. You're now part of the Henrietta registry.\n\nWe'll reach out when something real happens—a pilot program, a research finding, a chance to shape what we're building.\n\nUntil then, we're heads down working.\n\n— Henrietta`,
+        text: `${greeting}\n\nYour email is verified. You're now part of the Henrietta registry.\n\nWe'll reach out when something real happens—a pilot program, a research finding, a chance to shape what we're building.\n\nUntil then, we're heads down working.\n\n— Henrietta\n\nIf this ever stops feeling relevant, you can step out here: ${unsubscribeUrl}`,
       }),
     });
   } catch (error) {

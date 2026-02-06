@@ -5,6 +5,7 @@ import StatementPage from './pages/StatementPage';
 import AboutPage from './pages/AboutPage';
 import VerifyPage from './pages/VerifyPage';
 import { ScrollToTop } from './components';
+import UnsubscribePage from './pages/UnsubscribePage';
 
 /**
  * Main App component with routing
@@ -19,6 +20,7 @@ function App() {
         <Route path="/statement" element={<StatementPage />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/verify" element={<VerifyPage />} />
+        <Route path="/unsubscribe" element={<UnsubscribePage />} />
       </Routes>
     </BrowserRouter>
   );
