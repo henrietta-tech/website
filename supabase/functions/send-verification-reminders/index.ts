@@ -125,7 +125,9 @@ async function sendReminderEmail(
 ): Promise<EmailResult> {
   
   const verifyUrl = `${SUPABASE_URL}/functions/v1/verify-email?token=${token}`;
-  const { subject, html, text } = getEmailContent(reminderType, verifyUrl);
+  const unsubscribeToken = btoa(email);
+  const unsubscribeUrl = `${SUPABASE_URL}/functions/v1/unsubscribe?token=${unsubscribeToken}`;
+  const { subject, html, text } = getEmailContent(reminderType, verifyUrl, unsubscribeUrl);
 
   try {
     const response = await fetch('https://api.resend.com/emails', {
@@ -138,6 +140,10 @@ async function sendReminderEmail(
         from: 'Henrietta <hello@mail.henriettatech.com>',
         to: email,
         subject,
+        headers: {
+          'List-Unsubscribe': `<${unsubscribeUrl}>`,
+          'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click'
+        },
         html,
         text,
       }),
@@ -157,7 +163,14 @@ async function sendReminderEmail(
   }
 }
 
-function getEmailContent(reminderType: string, verifyUrl: string) {
+function getEmailContent(reminderType: string, verifyUrl: string, unsubscribeUrl: string) {
+  const footer = `
+    <p style="color: #999; font-size: 12px; margin-top: 40px;">
+      If this ever stops feeling relevant, you can <a href="${unsubscribeUrl}" style="color: #999;">step out here</a>.
+    </p>
+  `;
+  const footerText = `\n\nIf this ever stops feeling relevant, you can step out here: ${unsubscribeUrl}`;
+
   switch (reminderType) {
     case '24h':
       return {
@@ -168,9 +181,10 @@ function getEmailContent(reminderType: string, verifyUrl: string) {
           <p>If you still want in, just click below:</p>
           <p><a href="${verifyUrl}" style="display: inline-block; padding: 12px 24px; background: #1a1a1a; color: white; text-decoration: none; border-radius: 4px;">Verify my email</a></p>
           <p>If you've changed your mind, no action needed—we'll remove your information automatically in a few days.</p>
-          <p>— The Henrietta team</p>
+          <p>— Henrietta</p>
+          ${footer}
         `,
-        text: `Hi,\n\nYou started joining the Henrietta registry yesterday but haven't verified your email yet.\n\nIf you still want in, click here: ${verifyUrl}\n\nIf you've changed your mind, no action needed—we'll remove your information automatically in a few days.\n\n— The Henrietta team`,
+        text: `Hi,\n\nYou started joining the Henrietta registry yesterday but haven't verified your email yet.\n\nIf you still want in, click here: ${verifyUrl}\n\nIf you've changed your mind, no action needed—we'll remove your information automatically in a few days.\n\n— Henrietta${footerText}`,
       };
 
     case '72h':
@@ -182,9 +196,10 @@ function getEmailContent(reminderType: string, verifyUrl: string) {
           <p>We don't want to be annoying, so this is it. If you want to be part of what we're building—a patient-owned health data registry—verify here:</p>
           <p><a href="${verifyUrl}" style="display: inline-block; padding: 12px 24px; background: #1a1a1a; color: white; text-decoration: none; border-radius: 4px;">Verify my email</a></p>
           <p>After this, your signup will expire in a few days and we'll delete your information.</p>
-          <p>— The Henrietta team</p>
+          <p>— Henrietta</p>
+          ${footer}
         `,
-        text: `Hi,\n\nThis is our last reminder about verifying your Henrietta registration.\n\nWe don't want to be annoying, so this is it. If you want to be part of what we're building—a patient-owned health data registry—verify here:\n\n${verifyUrl}\n\nAfter this, your signup will expire in a few days and we'll delete your information.\n\n— The Henrietta team`,
+        text: `Hi,\n\nThis is our last reminder about verifying your Henrietta registration.\n\nWe don't want to be annoying, so this is it. If you want to be part of what we're building—a patient-owned health data registry—verify here:\n\n${verifyUrl}\n\nAfter this, your signup will expire in a few days and we'll delete your information.\n\n— Henrietta${footerText}`,
       };
 
     case 'final':
@@ -196,9 +211,10 @@ function getEmailContent(reminderType: string, verifyUrl: string) {
           <p>If you still want to join:</p>
           <p><a href="${verifyUrl}" style="display: inline-block; padding: 12px 24px; background: #1a1a1a; color: white; text-decoration: none; border-radius: 4px;">Verify before it expires</a></p>
           <p>If not, we'll delete your information and you won't hear from us again.</p>
-          <p>— The Henrietta team</p>
+          <p>— Henrietta</p>
+          ${footer}
         `,
-        text: `Hi,\n\nYour Henrietta registration will be deleted tomorrow since we haven't received verification.\n\nIf you still want to join: ${verifyUrl}\n\nIf not, we'll delete your information and you won't hear from us again.\n\n— The Henrietta team`,
+        text: `Hi,\n\nYour Henrietta registration will be deleted tomorrow since we haven't received verification.\n\nIf you still want to join: ${verifyUrl}\n\nIf not, we'll delete your information and you won't hear from us again.\n\n— Henrietta${footerText}`,
       };
 
     default:

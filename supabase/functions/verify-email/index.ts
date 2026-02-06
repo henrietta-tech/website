@@ -102,6 +102,10 @@ async function sendWelcomeEmail(email: string, firstName: string | null) {
         from: 'Henrietta <hello@mail.henriettatech.com>',
         to: email,
         subject: "You're in",
+        headers: {
+          'List-Unsubscribe': `<${unsubscribeUrl}>`,
+          'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click'
+        },
         html: `
           <p>${greeting}</p>
           <p>Your email is verified. You're now part of the Henrietta registry.</p>
@@ -110,9 +114,10 @@ async function sendWelcomeEmail(email: string, firstName: string | null) {
           <p>— Henrietta</p>
           <p style="color: #999; font-size: 12px; margin-top: 40px;">
             If this ever stops feeling relevant, you can <a href="${unsubscribeUrl}" style="color: #999;">step out here</a>.
+            <br>If you want us to delete everything we have about you, just reply and ask.
           </p>
         `,
-        text: `${greeting}\n\nYour email is verified. You're now part of the Henrietta registry.\n\nWe'll reach out when something real happens—a pilot program, a research finding, a chance to shape what we're building.\n\nUntil then, we're heads down working.\n\n— Henrietta\n\nIf this ever stops feeling relevant, you can step out here: ${unsubscribeUrl}`,
+        text: `${greeting}\n\nYour email is verified. You're now part of the Henrietta registry.\n\nWe'll reach out when something real happens—a pilot program, a research finding, a chance to shape what we're building.\n\nUntil then, we're heads down working.\n\n— Henrietta\n\nIf this ever stops feeling relevant, you can step out here: ${unsubscribeUrl}\n\nIf you want us to delete everything we have about you, just reply and ask.`,
       }),
     });
   } catch (error) {

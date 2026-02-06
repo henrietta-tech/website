@@ -99,13 +99,21 @@ serve(async (req) => {
       .single();
 
     if (existing && existing.email_verified && !existing.deleted_at) {
+      await supabase
+        .from('updates_opt_in')
+        .update({ 
+          is_active: true,
+          updated_at: new Date().toISOString()
+        })
+        .eq('email_normalized', emailNormalized);
+        
       return new Response(
         JSON.stringify({ success: true }),
         { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
-    if (existing && !existing.email_verified) {
+    if (existing && (!existing.email_verified || existing.deleted_at)) {
       const { error: updateError } = await supabase
         .from('registry_contacts')
         .update({
@@ -124,6 +132,7 @@ serve(async (req) => {
           reminder_count: 0,
           deleted_at: null,
           deletion_reason: null,
+          email_verified: false,
           updated_at: new Date().toISOString(),
         })
         .eq('id', existing.id);
@@ -205,6 +214,8 @@ async function sendVerificationEmail(
     .eq('id', contactId);
 
   const verifyUrl = `${SUPABASE_URL}/functions/v1/verify-email?token=${token}`;
+  const unsubscribeToken = btoa(email);
+  const unsubscribeUrl = `${SUPABASE_URL}/functions/v1/unsubscribe?token=${unsubscribeToken}`;
   const greeting = firstName ? `Hi ${firstName},` : 'Hi,';
 
   try {
@@ -218,6 +229,10 @@ async function sendVerificationEmail(
         from: 'Henrietta <hello@mail.henriettatech.com>',
         to: email,
         subject: 'An invitation to something different',
+        headers: {
+          'List-Unsubscribe': `<${unsubscribeUrl}>`,
+          'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click'
+        },
         html: `
           <p>${greeting}</p>
           <p>You asked to be part of what we're building.</p>
@@ -226,8 +241,11 @@ async function sendVerificationEmail(
             <a href="${verifyUrl}" style="display: inline-block; padding: 14px 28px; background: #1a1a1a; color: white; text-decoration: none; border-radius: 4px; font-weight: 500;">Verify my email</a>
           </p>
           <p>— Henrietta</p>
+          <p style="color: #999; font-size: 12px; margin-top: 40px;">
+            If this ever stops feeling relevant, you can <a href="${unsubscribeUrl}" style="color: #999;">step out here</a>.
+          </p>
         `,
-        text: `${greeting}\n\nYou asked to be part of what we're building.\n\nWe don't take that lightly.\n\nVerify your email: ${verifyUrl}\n\n— Henrietta`,
+        text: `${greeting}\n\nYou asked to be part of what we're building.\n\nWe don't take that lightly.\n\nVerify your email: ${verifyUrl}\n\n— Henrietta\n\nIf this ever stops feeling relevant, you can step out here: ${unsubscribeUrl}`,
       }),
     });
 
