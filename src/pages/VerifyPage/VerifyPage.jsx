@@ -24,20 +24,17 @@ const SuccessState = ({ name }) => (
     className="min-h-screen flex flex-col items-center justify-center px-6"
     style={{ backgroundColor: '#7B85B8' }}
   >
-    <p 
-      className="text-white font-bold mb-2"
-      style={{ fontSize: 'clamp(2rem, 8vw, 4rem)' }}
-    >
+    <p className="text-white/80 text-2xl font-medium mb-1">
       {name ? `${name}, you're in.` : "You're in."}
     </p>
-    <p className="text-white/60 text-lg mb-12 leading-relaxed">
+    <p className="text-white/60 text-sm mb-10 leading-relaxed">
       We'll be careful with this.
     </p>
     
     <h1 
-      className="font-bold text-white/30 leading-none select-none text-center"
+      className="font-bold text-white leading-none select-none text-center"
       style={{ 
-        fontSize: 'clamp(4rem, 18vw, 10rem)',
+        fontSize: 'clamp(4.5rem, 22vw, 12rem)',
         letterSpacing: '-0.02em'
       }}
     >
