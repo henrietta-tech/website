@@ -31,7 +31,6 @@ const ExplorePage = () => {
       <Navigation onJoinRegistry={openRegistry} />
       
       <div className="relative flex-1 bg-[#210606]">
-        {/* Background Pattern - Covers full content area */}
         <div 
           className="absolute inset-0"
           style={{
@@ -43,7 +42,6 @@ const ExplorePage = () => {
           }}
         />
         
-        {/* Solid background overlay - covers navbar + "Henrietta" title only */}
         <div 
           className="absolute inset-x-0 top-0 z-10 bg-[#231F20]"
           style={{
@@ -51,7 +49,6 @@ const ExplorePage = () => {
           }}
         />
         
-        {/* Gradient starts after "Henrietta" title */}
         <div 
           className="absolute inset-x-0 z-10 pointer-events-none"
           style={{
@@ -61,19 +58,17 @@ const ExplorePage = () => {
           }}
         />
         
-        {/* Header - Original compact size */}
         <div className="relative z-20 pt-12 pb-8 md:pt-16 md:pb-12">
           <div className="max-w-3xl mx-auto px-6">
             <h1 className="text-3xl md:text-4xl font-bold text-[#7B85B8] mb-4">
               Henrietta
             </h1>
             <p className="text-lg md:text-xl text-gray-200 leading-relaxed">
-              Explore how and why we're creating infrastructure for patient-owned health data. Choose what interests you.
+              Care didn't end up this way by accident. Start wherever makes sense.
             </p>
           </div>
         </div>
         
-        {/* Doors Content - Mobile gets extra breathing room */}
         <div className="relative z-10">
           <div className="max-w-3xl mx-auto px-6 pt-32 md:pt-24 pb-12">
             <div className="space-y-2">
