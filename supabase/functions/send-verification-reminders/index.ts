@@ -3,6 +3,14 @@
 
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+import {
+  getReminder24hEmailHtml,
+  getReminder24hEmailText,
+  getReminder72hEmailHtml,
+  getReminder72hEmailText,
+  getReminderFinalEmailHtml,
+  getReminderFinalEmailText,
+} from '../_shared/email-templates.ts';
 
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!;
 const SUPABASE_SERVICE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
@@ -127,6 +135,7 @@ async function sendReminderEmail(
   const verifyUrl = `${SUPABASE_URL}/functions/v1/verify-email?token=${token}`;
   const unsubscribeToken = btoa(email);
   const unsubscribeUrl = `${SUPABASE_URL}/functions/v1/unsubscribe?token=${unsubscribeToken}`;
+  
   const { subject, html, text } = getEmailContent(reminderType, verifyUrl, unsubscribeUrl);
 
   try {
@@ -163,58 +172,31 @@ async function sendReminderEmail(
   }
 }
 
-function getEmailContent(reminderType: string, verifyUrl: string, unsubscribeUrl: string) {
-  const footer = `
-    <p style="color: #999; font-size: 12px; margin-top: 40px;">
-      If this ever stops feeling relevant, you can <a href="${unsubscribeUrl}" style="color: #999;">step out here</a>.
-    </p>
-  `;
-  const footerText = `\n\nIf this ever stops feeling relevant, you can step out here: ${unsubscribeUrl}`;
-
+function getEmailContent(
+  reminderType: string, 
+  verifyUrl: string, 
+  unsubscribeUrl: string
+): { subject: string; html: string; text: string } {
   switch (reminderType) {
     case '24h':
       return {
-        subject: 'Quick reminder to verify your email',
-        html: `
-          <p>Hi,</p>
-          <p>You started joining the Henrietta registry yesterday but haven't verified your email yet.</p>
-          <p>If you still want in, just click below:</p>
-          <p><a href="${verifyUrl}" style="display: inline-block; padding: 12px 24px; background: #1a1a1a; color: white; text-decoration: none; border-radius: 4px;">Verify my email</a></p>
-          <p>If you've changed your mind, no action needed—we'll remove your information automatically in a few days.</p>
-          <p>— Henrietta</p>
-          ${footer}
-        `,
-        text: `Hi,\n\nYou started joining the Henrietta registry yesterday but haven't verified your email yet.\n\nIf you still want in, click here: ${verifyUrl}\n\nIf you've changed your mind, no action needed—we'll remove your information automatically in a few days.\n\n— Henrietta${footerText}`,
+        subject: 'Quick reminder',
+        html: getReminder24hEmailHtml(verifyUrl, unsubscribeUrl),
+        text: getReminder24hEmailText(verifyUrl, unsubscribeUrl),
       };
 
     case '72h':
       return {
-        subject: 'Still interested? Last reminder',
-        html: `
-          <p>Hi,</p>
-          <p>This is our last reminder about verifying your Henrietta registration.</p>
-          <p>We don't want to be annoying, so this is it. If you want to be part of what we're building—a patient-owned health data registry—verify here:</p>
-          <p><a href="${verifyUrl}" style="display: inline-block; padding: 12px 24px; background: #1a1a1a; color: white; text-decoration: none; border-radius: 4px;">Verify my email</a></p>
-          <p>After this, your signup will expire in a few days and we'll delete your information.</p>
-          <p>— Henrietta</p>
-          ${footer}
-        `,
-        text: `Hi,\n\nThis is our last reminder about verifying your Henrietta registration.\n\nWe don't want to be annoying, so this is it. If you want to be part of what we're building—a patient-owned health data registry—verify here:\n\n${verifyUrl}\n\nAfter this, your signup will expire in a few days and we'll delete your information.\n\n— Henrietta${footerText}`,
+        subject: 'Still interested?',
+        html: getReminder72hEmailHtml(verifyUrl, unsubscribeUrl),
+        text: getReminder72hEmailText(verifyUrl, unsubscribeUrl),
       };
 
     case 'final':
       return {
         subject: 'Your signup expires tomorrow',
-        html: `
-          <p>Hi,</p>
-          <p>Your Henrietta registration will be deleted tomorrow since we haven't received verification.</p>
-          <p>If you still want to join:</p>
-          <p><a href="${verifyUrl}" style="display: inline-block; padding: 12px 24px; background: #1a1a1a; color: white; text-decoration: none; border-radius: 4px;">Verify before it expires</a></p>
-          <p>If not, we'll delete your information and you won't hear from us again.</p>
-          <p>— Henrietta</p>
-          ${footer}
-        `,
-        text: `Hi,\n\nYour Henrietta registration will be deleted tomorrow since we haven't received verification.\n\nIf you still want to join: ${verifyUrl}\n\nIf not, we'll delete your information and you won't hear from us again.\n\n— Henrietta${footerText}`,
+        html: getReminderFinalEmailHtml(verifyUrl, unsubscribeUrl),
+        text: getReminderFinalEmailText(verifyUrl, unsubscribeUrl),
       };
 
     default:

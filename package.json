@@ -6,16 +6,20 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "email": "email dev --dir ./emails"
   },
   "dependencies": {
+    "@react-email/components": "^1.0.7",
     "@supabase/supabase-js": "^2.93.3",
     "lucide-react": "^0.474.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "react-email": "^5.2.8",
     "react-router-dom": "^6.28.0"
   },
   "devDependencies": {
+    "@react-email/preview-server": "^5.2.8",
     "@vitejs/plugin-react": "^4.3.4",
     "autoprefixer": "^10.4.20",
     "postcss": "^8.4.49",

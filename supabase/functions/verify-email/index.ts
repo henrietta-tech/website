@@ -3,6 +3,7 @@
 
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+import { getWelcomeEmailHtml, getWelcomeEmailText } from '../_shared/email-templates.ts';
 
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!;
 const SUPABASE_SERVICE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
@@ -87,9 +88,11 @@ serve(async (req) => {
 });
 
 async function sendWelcomeEmail(email: string, firstName: string | null) {
-  const greeting = firstName ? `Hi ${firstName},` : 'Hi,';
   const unsubscribeToken = btoa(email);
   const unsubscribeUrl = `${SUPABASE_URL}/functions/v1/unsubscribe?token=${unsubscribeToken}`;
+  
+  const html = getWelcomeEmailHtml(firstName, unsubscribeUrl);
+  const text = getWelcomeEmailText(firstName, unsubscribeUrl);
   
   try {
     await fetch('https://api.resend.com/emails', {
@@ -101,23 +104,13 @@ async function sendWelcomeEmail(email: string, firstName: string | null) {
       body: JSON.stringify({
         from: 'Henrietta <hello@mail.henriettatech.com>',
         to: email,
-        subject: "You're in",
+        subject: 'You are in',
         headers: {
           'List-Unsubscribe': `<${unsubscribeUrl}>`,
           'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click'
         },
-        html: `
-          <p>${greeting}</p>
-          <p>Your email is verified. You're now part of the Henrietta registry.</p>
-          <p>We'll reach out when something real happens—a pilot program, a research finding, a chance to shape what we're building.</p>
-          <p>Until then, we're heads down working.</p>
-          <p>— Henrietta</p>
-          <p style="color: #999; font-size: 12px; margin-top: 40px;">
-            If this ever stops feeling relevant, you can <a href="${unsubscribeUrl}" style="color: #999;">step out here</a>.
-            <br>If you want us to delete everything we have about you, just reply and ask.
-          </p>
-        `,
-        text: `${greeting}\n\nYour email is verified. You're now part of the Henrietta registry.\n\nWe'll reach out when something real happens—a pilot program, a research finding, a chance to shape what we're building.\n\nUntil then, we're heads down working.\n\n— Henrietta\n\nIf this ever stops feeling relevant, you can step out here: ${unsubscribeUrl}\n\nIf you want us to delete everything we have about you, just reply and ask.`,
+        html,
+        text,
       }),
     });
   } catch (error) {

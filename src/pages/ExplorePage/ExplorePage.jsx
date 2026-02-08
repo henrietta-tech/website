@@ -42,35 +42,37 @@ const ExplorePage = () => {
           }}
         />
         
-        <div 
-          className="absolute inset-x-0 top-0 z-10 bg-[#231F20]"
-          style={{
-            height: '160px'
-          }}
-        />
+        {/* Solid background - covers nav + headline */}
+<div 
+  className="absolute inset-x-0 top-0 z-10 bg-[#231F20]"
+  style={{
+    height: '180px'
+  }}
+/>
+
+{/* Gradient starts right after headline */}
+<div 
+  className="absolute inset-x-0 z-10 pointer-events-none"
+  style={{
+    top: '180px',
+    height: '80px',
+    background: 'linear-gradient(to bottom, #231F20 0%, transparent 100%)'
+  }}
+/>
         
-        <div 
-          className="absolute inset-x-0 z-10 pointer-events-none"
-          style={{
-            top: '160px',
-            height: '120px',
-            background: 'linear-gradient(to bottom, #231F20 0%, transparent 100%)'
-          }}
-        />
-        
-        <div className="relative z-20 pt-12 pb-8 md:pt-16 md:pb-12">
+        <div className="relative z-20 pt-12 pb-4 md:pt-16 md:pb-6">
           <div className="max-w-3xl mx-auto px-6">
-            <h1 className="text-3xl md:text-4xl font-bold text-[#7B85B8] mb-4">
-              Henrietta
-            </h1>
-            <p className="text-lg md:text-xl text-gray-200 leading-relaxed">
-              Care didn't end up this way by accident. Start wherever makes sense.
+            <p className="text-3xl md:text-4xl text-gray-100 leading-tight font-medium">
+              Care didn't end up this way by accident.
+            </p>
+            <p className="text-3xl md:text-4xl text-gray-100 leading-tight font-medium mt-6">
+              Start wherever makes sense.
             </p>
           </div>
         </div>
         
         <div className="relative z-10">
-          <div className="max-w-3xl mx-auto px-6 pt-32 md:pt-24 pb-12">
+          <div className="max-w-3xl mx-auto px-6 pt-16 pb-12">
             <div className="space-y-2">
               {doorContent.map((door, index) => (
                 <Door

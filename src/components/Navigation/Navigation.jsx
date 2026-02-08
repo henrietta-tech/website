@@ -14,7 +14,11 @@ const Navigation = ({ onJoinRegistry }) => {
       <div className="max-w-3xl mx-auto px-6 py-4 flex items-center justify-between">
         <Link 
           to="/" 
-          className="text-xl font-semibold text-white hover:text-white/90 transition-colors"
+          className={`text-xl font-semibold transition-colors ${
+            isDarkPage 
+              ? "text-[#7B85B8] hover:text-[#8B9FE8]" 
+              : "text-white hover:text-white/90"
+          }`}
         >
           Henrietta<sup className="text-xs opacity-80 font-normal ml-0.5">™</sup>
         </Link>

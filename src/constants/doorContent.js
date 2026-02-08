@@ -1,3 +1,5 @@
+// src/constants/doorContent.js
+
 export const doorContent = [
   {
     id: 'name',
@@ -9,7 +11,7 @@ export const doorContent = [
         { text: 'We chose the name deliberately.' },
         {
           text:
-            'Healthcare is often discussed as policy, infrastructure, or cost. But when care is organized around institutional authority rather than individual interest, consent disappears, and decisions are made without the person at the center.'
+            'Healthcare is often discussed as policy, infrastructure, or cost. But when care is organized around institutional authority rather than individual interest, consent disappears and decisions are made without the person at the center.'
         },
         { text: 'Henrietta stands in for that reality.' },
         {
@@ -34,15 +36,15 @@ export const doorContent = [
         },
         {
           text:
-            "When something changes, pieces get left behind, and you're expected to pick them up yourself. Sometimes that includes a new problem to manage, or a cost you didn't choose."
+            "When something changes, pieces get left behind and you're expected to pick them up yourself. Sometimes that includes a new problem to manage or a cost you didn't choose."
         },
         {
           text:
-            'Over time, this starts to feel normal. Care becomes something you respond to, instead of something you maintain ahead of time.'
+            'Over time, this starts to feel normal. Care becomes something you respond to instead of something you maintain ahead of time.'
         },
         {
           text:
-            'People adapt. For many, health becomes something they manage quietly through routines, habits, and constant self-adjustment, outside a system that feels reactive, expensive, or misaligned.'
+            'People adapt. For many, health becomes something they manage quietly through routines, habits, and constant self adjustment, outside a system that feels reactive, expensive, or misaligned.'
         },
         { text: "It doesn't have to be this isolated.", weight: 'medium' }
       ]
@@ -53,16 +55,20 @@ export const doorContent = [
     id: 'dpc',
     title: 'Why Direct Primary Care Matters',
     summary:
-      'Direct Primary Care (DPC) gets the relationship right. Time, continuity, and prevention without insurance intermediaries.',
+      'Direct Primary Care (DPC) is a primary care practice model where patients work directly with a doctor, without insurance in between.',
     content: {
       paragraphs: [
         {
           text:
-            'DPC creates space for time, continuity, prevention, and long-term thinking — not just responses to problems.'
+            'By removing insurance billing from the relationship, DPC changes what care can look like.'
         },
         {
           text:
-            'Instead of insurance billing, people work directly with a primary care clinician through a simple, predictable membership. That separation keeps care focused, costs transparent, and decisions grounded in the relationship, not reimbursement rules.'
+            'It creates space for time, continuity, prevention, and long term thinking instead of constant responses to problems.'
+        },
+        {
+          text:
+            'Care decisions stay grounded in the relationship itself rather than reimbursement rules, visit codes, or volume targets.'
         }
       ]
     }
@@ -77,16 +83,16 @@ export const doorContent = [
       paragraphs: [
         {
           text:
-            "When a DPC practice closes, when a doctor retires, when someone moves to a new city, the relationship can persist, but the infrastructure often doesn't."
+            'When a DPC practice closes, when a doctor retires, or when someone moves to a new city, the relationship can persist but the infrastructure often does not.'
         },
         { text: 'Health information fragments. Continuity breaks. People start over.' },
         {
           text:
-            'Not because the model failed. Because the infrastructure around it was never built to move with them. Ownership and portability were never part of the design.'
+            'Not because the model failed. Because the infrastructure around it was never built to move with people. Ownership and portability were never part of the design.'
         },
         {
           text:
-            'DPC gets care right. Henrietta is being built to make sure that care can last across time, across geography, across life changes.',
+            'DPC gets care right. Henrietta is being built to make sure that care can last across time, geography, and life changes.',
           weight: 'medium'
         }
       ]
@@ -108,7 +114,7 @@ export const doorContent = [
           text:
             'Not waiting for a crisis. Not reacting to problems after they appear. But building and maintaining over time.'
         },
-        { text: 'People who participate in decisions, relationships, and long-term thinking.' },
+        { text: 'People who participate in decisions, relationships, and long term thinking.' },
         { text: "This isn't about being perfectly healthy. It's about being engaged:", weight: 'medium' }
       ],
       list: [
@@ -137,7 +143,7 @@ export const doorContent = [
       "We're mapping where momentum already exists. This is how care that works can last.",
     content: {
       paragraphs: [
-        { text: "Right now, we're building the foundation.", weight: 'medium' },
+        { text: 'Right now, we are building the foundation.', weight: 'medium' },
         {
           text:
             'Mapping where DPC exists. Understanding where practices are, where interest is growing, and where gaps remain.',
@@ -162,7 +168,7 @@ export const doorContent = [
         title: "We're not asking for medical information.",
         paragraphs: [
           'What you share helps us understand where interest exists and connect people to care. Nothing is sold or used for diagnosis.',
-          'Communication is always opt-in.'
+          'Communication is always opt in.'
         ],
         closing: "That's it."
       },
@@ -175,7 +181,7 @@ export const heroContent = {
   title: 'Henrietta',
   paragraphs: [
     "Healthcare isn't something we're given. It doesn't wait for permission or arrive on someone else's terms. It has to be built and protected.",
-    'This is an invitation to participate in building infrastructure around your care, not their systems. Health information stays with you, and is held in your interest.',
+    'This is an invitation to participate in building infrastructure around your care, not their systems. Health information stays with you and is held in your interest.',
     'Henrietta is slowing down to build real relationships, connecting patients and professionals who are willing to stand in the same corner for their health.'
   ]
 };
@@ -197,7 +203,6 @@ export const registryContent = {
         name: 'firstName',
         label: 'First name',
         type: 'text',
-        placeholder: '',
         required: false,
         hint: 'So we can speak to you like a person.'
       },
@@ -205,19 +210,18 @@ export const registryContent = {
         name: 'email',
         label: 'Email',
         type: 'email',
-        placeholder: 'your@email.com',
         required: true
       },
       {
         name: 'zipCode',
         label: 'ZIP Code',
         type: 'text',
-        placeholder: '12345',
         pattern: '[0-9]{5}',
         required: true
       }
     ]
   },
+
   step2: {
     title: 'Help us understand better',
     description: 'Optional questions. You can skip these entirely.',
@@ -233,7 +237,8 @@ export const registryContent = {
         label: 'Would you like to be contacted by DPC practices in your area?',
         type: 'radio',
         options: ['Yes', 'No', 'Maybe later'],
-        hint: 'DPC is still growing. It may not be in your area yet. Your interest helps us know where to focus.'
+        hint:
+          'DPC is still growing. It may not be in your area yet. Your interest helps us know where to focus.'
       },
       {
         name: 'referralSource',
@@ -243,6 +248,7 @@ export const registryContent = {
       }
     ]
   },
+
   step3: {
     title: "You're in",
     content: {
@@ -254,7 +260,7 @@ export const registryContent = {
         { text: 'Read updates', href: '#updates' },
         { text: 'Statement of Use', href: '#statement' }
       ],
-      closing: "Otherwise, we'll be in touch when it matters."
+      closing: 'Otherwise, we will be in touch when it matters.'
     }
   }
 };
