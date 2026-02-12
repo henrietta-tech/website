@@ -5,7 +5,7 @@ export const doorContent = [
     id: 'name',
     title: 'Why the Name Henrietta',
     summary:
-      'Henrietta Lacks was a Black woman whose cells were taken without her consent in 1951. This name reminds us to build what she never had: care that belongs to you and a system that moves along with you.',
+      'Henrietta Lacks was a Black woman whose cells were taken without her consent in 1951. The name serves as a reminder that systems affect real people, and that governance must be designed deliberately.',
     content: {
       paragraphs: [
         { text: 'We chose the name deliberately.' },
@@ -16,7 +16,7 @@ export const doorContent = [
         { text: 'Henrietta stands in for that reality.' },
         {
           text:
-            "Not as a symbol of suffering, and not as a story we're asking you to adopt, but as a reminder that care ultimately belongs to people, not institutions."
+            "Not as a symbol of suffering, and not as a story we're asking you to adopt, but as a reminder that infrastructure should serve people first, not institutions."
         }
       ],
       link: { text: 'About the Name →', href: '/about' }
@@ -88,7 +88,7 @@ export const doorContent = [
         { text: 'Health information fragments. Continuity breaks. People start over.' },
         {
           text:
-            'Not because the model failed. Because the infrastructure around it was never built to move with people. Ownership and portability were never part of the design.'
+            'Not because the model failed. Because the infrastructure around it was never built to move with people. Control and portability were never part of the original design.'
         },
         {
           text:
@@ -181,7 +181,7 @@ export const heroContent = {
   title: 'Henrietta',
   paragraphs: [
     "Healthcare isn't something we're given. It doesn't wait for permission or arrive on someone else's terms. It has to be built and protected.",
-    'This is an invitation to participate in building infrastructure around your care, not their systems. Health information stays with you and is held in your interest.',
+    'This is an invitation to participate in building infrastructure around your care, not their systems. Health information should move with you and remain under your control.',
     'Henrietta is slowing down to build real relationships, connecting patients and professionals who are willing to stand in the same corner for their health.'
   ]
 };
