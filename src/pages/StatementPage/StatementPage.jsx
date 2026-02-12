@@ -3,8 +3,8 @@ import { Navigation, Footer, RegistryModal } from '../../components';
 import { useRegistry } from '../../hooks';
 
 /**
- * StatementPage - Statement of Use with trademark explanation
- * Full context on governance, protection, and boundaries
+ * StatementPage - Statement of Use
+ * Explains data collection, governance structure, and trademark protection
  */
 const StatementPage = () => {
   const {
@@ -21,109 +21,93 @@ const StatementPage = () => {
   return (
     <div className="min-h-screen bg-white flex flex-col">
       <Navigation onJoinRegistry={openRegistry} />
-      
+
       <main className="flex-1 max-w-3xl mx-auto px-6 py-12">
         <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-8">
           Statement of Use
         </h1>
-        
+
         <div className="prose prose-lg max-w-none">
           {/* Introduction */}
           <p className="text-xl text-gray-700 leading-relaxed mb-8">
-            Henrietta is infrastructure for patient-owned health data. This statement describes how it works, what it protects, and who it serves.
+            Henrietta is infrastructure for patient-controlled health data.
+            This statement explains what information we collect, how it is used,
+            and how governance and trademark protections support that work.
           </p>
 
-          {/* Data Usage */}
+          {/* Data Collection */}
           <section className="mb-12">
             <h2 className="text-2xl font-semibold text-gray-900 mb-4">
               What Data We Collect
             </h2>
             <p className="text-gray-700 leading-relaxed mb-4">
-              Registry participants provide:
+              Registry participants may provide:
             </p>
             <ul className="list-disc pl-6 mb-4 text-gray-700 space-y-2">
-              <li>Email address (for updates)</li>
-              <li>ZIP code (to map demand)</li>
+              <li>Email address (for verification and updates)</li>
+              <li>ZIP code (to understand geographic demand)</li>
               <li>Optional: DPC practice status</li>
               <li>Optional: Interest in provider contact</li>
             </ul>
             <p className="text-gray-700 leading-relaxed">
-              We do not collect medical information, diagnoses, or health records. This is infrastructure mapping, not healthcare delivery.
+              We do not collect medical records, diagnoses, treatment history,
+              or clinical data at this stage. The registry supports infrastructure
+              development and governance rehearsal, not healthcare delivery.
             </p>
           </section>
 
-          {/* How Data Is Used */}
+          {/* Data Usage */}
           <section className="mb-12">
             <h2 className="text-2xl font-semibold text-gray-900 mb-4">
               How Information Is Used
             </h2>
             <p className="text-gray-700 leading-relaxed mb-4">
-              Registry data helps us:
+              Registry information helps us:
             </p>
             <ul className="list-disc pl-6 mb-4 text-gray-700 space-y-2">
-              <li>Understand where interest in patient-owned infrastructure exists</li>
-              <li>Connect engaged patients with Direct Primary Care practices</li>
-              <li>Identify gaps in coverage and momentum</li>
-              <li>Share meaningful updates (no frequent emails, no marketing)</li>
+              <li>Understand where interest in patient-controlled infrastructure exists</li>
+              <li>Identify regions with potential Direct Primary Care engagement</li>
+              <li>Share meaningful updates about infrastructure development</li>
+              <li>Inform sequencing decisions for future pilots</li>
             </ul>
             <p className="text-gray-700 leading-relaxed">
-              Your information is never sold, shared with third parties for marketing, or used for purposes beyond building this infrastructure.
+              We do not sell registry information and do not share it with
+              third parties for advertising or marketing. Registry data is used
+              solely to support the development of Henrietta’s infrastructure.
+              Any future use beyond this scope would require explicit consent.
             </p>
           </section>
 
-          {/* Trademark Protection */}
+          {/* Trademark */}
           <section className="mb-12">
             <h2 className="text-2xl font-semibold text-gray-900 mb-4">
-              Legal Protection of Patient-Owned Infrastructure
+              Trademark and Brand Protection
             </h2>
-            
+
             <p className="text-gray-700 leading-relaxed mb-6">
-              Henrietta™ is a registered trademark. This is defensive infrastructure, not corporate ownership.
+              Henrietta™ is a registered trademark. The trademark protects
+              continuity of the infrastructure and prevents misleading or
+              unauthorized commercial use of the name.
             </p>
 
             <h3 className="text-xl font-semibold text-gray-900 mb-3">
               What the Trademark Protects
             </h3>
-            <p className="text-gray-700 leading-relaxed mb-4">
-              The trademark ensures:
-            </p>
             <ul className="list-disc pl-6 mb-6 text-gray-700 space-y-2">
-              <li>The name serves patient-owned infrastructure</li>
-              <li>Continuity for people who invest time and trust</li>
-              <li>Legal recourse against extractive use</li>
-              <li>Protection of non-extractive principles</li>
-            </ul>
-
-            <h3 className="text-xl font-semibold text-gray-900 mb-3">
-              What It Prevents
-            </h3>
-            <p className="text-gray-700 leading-relaxed mb-4">
-              Without trademark protection, corporate entities could:
-            </p>
-            <ul className="list-disc pl-6 mb-6 text-gray-700 space-y-2">
-              <li>Launch competing "Henrietta Health" products</li>
-              <li>Dilute the name across extractive services</li>
-              <li>Co-opt work the community built</li>
-              <li>Lock out original participants through legal claims</li>
+              <li>Integrity of the Henrietta name and governance model</li>
+              <li>Continuity for participants who invest time and trust</li>
+              <li>Protection against misleading or extractive reuse of the name</li>
             </ul>
 
             <h3 className="text-xl font-semibold text-gray-900 mb-3">
               What It Does Not Restrict
             </h3>
-            <p className="text-gray-700 leading-relaxed mb-4">
-              The trademark does not prevent:
-            </p>
             <ul className="list-disc pl-6 mb-6 text-gray-700 space-y-2">
-              <li>Participation in building the infrastructure</li>
+              <li>Participation in the registry</li>
               <li>Use of services once they exist</li>
-              <li>Critical discussion or analysis</li>
-              <li>Fair use in educational or journalistic contexts</li>
+              <li>Critical discussion, commentary, or fair use</li>
+              <li>Educational or journalistic reference</li>
             </ul>
-
-            <p className="text-gray-700 leading-relaxed border-l-4 border-gray-300 pl-6 py-2">
-              Who benefits: Patients and participants.<br />
-              Who's protected against: Extractive use.
-            </p>
           </section>
 
           {/* Governance */}
@@ -132,44 +116,52 @@ const StatementPage = () => {
               Governance and Control
             </h2>
             <p className="text-gray-700 leading-relaxed mb-4">
-              Henrietta has not accepted corporate or institutional backing. There are no venture capital investors, no board seats held by external entities, and no obligations to maximize financial returns.
+              Henrietta is currently founder-led and independent. There are no
+              external board seats or institutional control rights over registry
+              governance at this time.
             </p>
             <p className="text-gray-700 leading-relaxed mb-4">
-              What comes next depends on who stays close and why. This is not a promise that everything will be collectively governed, but it is a commitment that no outside entity controls the direction.
+              This structure allows the infrastructure to be developed deliberately,
+              without short-term pressure to monetize registry-level data.
             </p>
             <p className="text-gray-700 leading-relaxed">
-              Governance structures will be shared transparently as they develop. Participation is always voluntary.
+              Governance structures may evolve as the infrastructure develops.
+              Any material changes affecting participant data or consent will
+              be communicated clearly. Participation is voluntary, and participants
+              may exit at any time.
             </p>
           </section>
 
-          {/* Updates and Changes */}
+          {/* Updates */}
           <section className="mb-12">
             <h2 className="text-2xl font-semibold text-gray-900 mb-4">
               Updates to This Statement
             </h2>
             <p className="text-gray-700 leading-relaxed mb-4">
-              This statement may be updated as Henrietta develops. Major changes will be communicated to registry participants.
+              This statement may be updated as the infrastructure evolves.
+              Material changes will be communicated to registry participants.
             </p>
             <p className="text-gray-700 leading-relaxed">
-              Current version: January 2025
+              Current version: February 2026
             </p>
           </section>
 
           {/* Contact */}
           <section className="mb-12">
             <h2 className="text-2xl font-semibold text-gray-900 mb-4">
-              Questions or Concerns
+              Questions
             </h2>
             <p className="text-gray-700 leading-relaxed">
-              If you have questions about how your information is used, how the trademark protects the infrastructure, or anything else in this statement, we're here to answer them clearly.
+              If you have questions about how registry information is used,
+              how consent is structured, or how trademark protections function,
+              you may contact us directly for clarification.
             </p>
           </section>
         </div>
       </main>
-      
+
       <Footer />
 
-      {/* Registry Modal */}
       <RegistryModal
         show={showRegistry}
         step={registryStep}
