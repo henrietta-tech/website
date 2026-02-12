@@ -1,218 +1,181 @@
-# Henrietta Healthcare Platform
+# Henrietta
 
-A React application for the Henrietta healthcare infrastructure project, built with modern best practices and proper separation of concerns.
+Infrastructure for patient-controlled health data.
+
+Henrietta is a design principle.
+
+Her name serves as a constant reminder that our actions have consequences. Every architectural decision touches someone's life. Every shortcut has a cost. Behind every dataset is a person.
+
+## Quick Start
+
+```bash
+npm install
+cp .env.example .env
+# Add your Supabase credentials to .env
+npm run dev
+```
+
+The app runs at `http://localhost:5173`.
 
 ## Project Structure
 
 ```
-src/
-├── components/          # Reusable UI components
-│   ├── Hero/           # Landing hero section
-│   ├── Door/           # Collapsible content sections
-│   ├── Footer/         # Site footer
-│   ├── MobileCTA/      # Mobile sticky CTA
-│   └── Registry/       # Multi-step registry form
-│       ├── RegistryModal.jsx
-│       ├── RegistryStep1.jsx
-│       ├── RegistryStep2.jsx
-│       └── RegistryStep3.jsx
-├── pages/              # Top-level page components
-│   └── LandingPage/    # Main landing page
-├── hooks/              # Custom React hooks
-│   ├── useDoorState.js      # Door expand/collapse logic
-│   ├── useRegistry.js       # Registry form state
-│   └── useScrollTracking.js # Scroll-based UI logic
-├── constants/          # Content and configuration
-│   └── doorContent.js  # All page content centralized
-├── styles/             # Global styles and animations
-│   └── animations.css  # CSS animations
-├── services/           # API and external service integrations
-│   └── (add your API services here)
-├── App.jsx            # Main app component
-├── main.jsx           # Application entry point
-└── index.css          # Global CSS with Tailwind
+├── src/
+│   ├── components/     # UI components (Hero, Door, Footer, Registry)
+│   ├── hooks/          # Custom hooks (useDoorState, useRegistry, useScrollTracking)
+│   ├── pages/          # Route pages (HomePage, ExplorePage)
+│   ├── services/       # API layer (registryService)
+│   ├── constants/      # Content and configuration
+│   ├── lib/            # Utilities
+│   └── styles/         # CSS
+├── emails/             # React Email templates
+├── supabase/
+│   ├── functions/      # Edge functions
+│   └── migrations/     # Database schema
+└── public/             # Static assets
 ```
 
-## Key Features
+## Architecture
 
-### Separation of Concerns
-- **Components**: Pure UI components that receive data via props
-- **Hooks**: Reusable stateful logic extracted from components
-- **Constants**: Centralized content management for easy updates
-- **Pages**: Top-level components that orchestrate smaller components
+React 18 application with Vite, deployed to Netlify with a Supabase backend.
+
+### Two-Page Structure
+
+| Route | Purpose |
+|-------|---------|
+| `/` | Hero — first impression, decision point |
+| `/explore` | Doors — progressive disclosure of information |
+
+### Component Pattern
+
+```
+Component (presentation)
+    ↓
+Hook (state + logic)
+    ↓
+Service (API calls)
+    ↓
+Constants (content)
+```
+
+**Components** render UI. **Hooks** manage state and behavior. **Services** handle external communication. **Constants** store all copy and configuration — no hardcoded strings in components.
+
+### Key Components
+
+| Component | Purpose |
+|-----------|---------|
+| `Hero` | Landing section with dual CTAs |
+| `Door` | Expandable content panels (6 total) |
+| `Registry` | Multi-step signup modal |
+| `MobileCTA` | Sticky button on `/explore` after scroll engagement |
+| `Footer` | Links and legal |
 
 ### Custom Hooks
 
-#### `useDoorState()`
-Manages the expand/collapse state of content sections ("doors").
+| Hook | Purpose |
+|------|---------|
+| `useDoorState` | Manages which doors are open/closed |
+| `useRegistry` | Form state and submission logic |
+| `useScrollTracking` | Tracks scroll depth for mobile CTA trigger |
 
-```javascript
-const {
-  expandedDoors,      // Object tracking which doors are open
-  doorsHighlighted,   // Boolean for highlight animation
-  toggleDoor,         // Function to toggle a specific door
-  highlightAllDoors,  // Function to briefly highlight all doors
-  getExpandedCount    // Function to count open doors
-} = useDoorState();
+## Database
+
+### `landing_page_leads` table
+
+```sql
+create table landing_page_leads (
+  id uuid default gen_random_uuid() primary key,
+  email text not null,
+  zip_code text,
+  dpc_status text,
+  contact_preference text,
+  referral_source text,
+  created_at timestamp with time zone default now(),
+  user_agent text,
+  screen_width integer,
+  utm_source text,
+  utm_campaign text,
+  utm_medium text,
+  metadata jsonb,
+  processed boolean default false
+);
 ```
 
-#### `useRegistry()`
-Manages the multi-step registration form state.
+### Row Level Security
 
-```javascript
-const {
-  showRegistry,      // Boolean to show/hide modal
-  registryStep,      // Current step (1, 2, or 3)
-  formData,          // Form field values
-  openRegistry,      // Function to open modal
-  closeRegistry,     // Function to close and reset
-  updateFormData,    // Function to update field values
-  goToStep2,         // Function to advance to step 2
-  completeRegistry   // Function to complete registration
-} = useRegistry();
+Anonymous users can insert only. No read, update, or delete access.
+
+```sql
+-- Enable RLS
+alter table landing_page_leads enable row level security;
+
+-- Insert-only policy for anon
+create policy "Allow anonymous inserts only"
+  on landing_page_leads
+  for insert
+  to anon
+  with check (true);
 ```
 
-#### `useScrollTracking(expandedDoors, door6Ref)`
-Tracks scroll position and door engagement to show/hide mobile CTA.
+## Email Templates
 
-```javascript
-const showMobileCTA = useScrollTracking(expandedDoors, door6Ref);
-```
+React Email templates in `/emails`:
 
-### Component Architecture
+| Template | Trigger |
+|----------|---------|
+| `VerificationEmail` | Immediately after signup |
+| `WelcomeEmail` | After email verification |
+| `Reminder24hEmail` | 24h if unverified |
+| `Reminder72hEmail` | 72h if unverified |
+| `ReminderFinalEmail` | Final reminder before expiry |
 
-All components follow these principles:
-- Single Responsibility Principle
-- Props for configuration and callbacks
-- No direct state management (delegated to hooks)
-- Fully documented with JSDoc comments
-
-### Content Management
-
-All page content is centralized in `src/constants/doorContent.js`. This includes:
-- Door titles and summaries
-- Full content for each section
-- Registry form configuration
-- Hero and footer text
-
-This makes content updates easy without touching component code.
-
-## Getting Started
-
-### Installation
-
+Preview templates:
 ```bash
-npm install
+npm run email
 ```
 
-### Development
+## Environment Variables
 
-```bash
-npm run dev
+Required in `.env`:
+
+```
+VITE_SUPABASE_URL=https://your-project.supabase.co
+VITE_SUPABASE_ANON_KEY=your-anon-key
 ```
 
-Opens development server at `http://localhost:5173`
+Get these from [Supabase Dashboard → Settings → API](https://app.supabase.com/project/_/settings/api).
 
-### Build for Production
+## Scripts
 
-```bash
-npm run build
-```
+| Command | Description |
+|---------|-------------|
+| `npm run dev` | Development server |
+| `npm run build` | Production build |
+| `npm run preview` | Preview production build |
+| `npm run email` | Email template preview |
 
-Creates optimized production build in `/dist`
+## Deployment
 
-### Preview Production Build
+### Netlify
 
-```bash
-npm run preview
-```
+The included `netlify.toml` handles:
+- Build command and publish directory
+- Security headers (X-Frame-Options, CSP, etc.)
+- Asset caching (1 year for `/assets/*`)
+- SPA routing (all routes → `index.html`)
 
-## Adding New Features
+### Environment Variables
 
-### Adding a New Service (API Integration)
+Set in Netlify dashboard:
+- `VITE_SUPABASE_URL`
+- `VITE_SUPABASE_ANON_KEY`
 
-Create a new service file in `src/services/`:
+## Tech Stack
 
-```javascript
-// src/services/registryService.js
-export const submitRegistry = async (formData) => {
-  const response = await fetch('/api/registry', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(formData)
-  });
-  return response.json();
-};
-```
+- **Frontend**: React 18, React Router, Tailwind CSS
+- **Build**: Vite
+- **Backend**: Supabase (PostgreSQL, Edge Functions)
+- **Email**: React Email
+- **Hosting**: Netlify
+- **Monitoring**: Sentry
 
-Then use it in your hook:
-
-```javascript
-// In src/hooks/useRegistry.js
-import { submitRegistry } from '../services/registryService';
-
-const completeRegistry = async () => {
-  try {
-    await submitRegistry(formData);
-    setRegistryStep(3);
-  } catch (error) {
-    console.error('Registration failed:', error);
-  }
-};
-```
-
-### Adding a New Page
-
-1. Create a new directory in `src/pages/`
-2. Add your page component
-3. Export it from an index.js
-4. Import and use in App.jsx
-
-### Adding a New Component
-
-1. Create a new directory in `src/components/`
-2. Add your component file
-3. Export from index.js
-4. Add to barrel export in `src/components/index.js`
-
-## Architecture Benefits
-
-### Maintainability
-- Easy to locate and update specific functionality
-- Changes to one component don't affect others
-- Clear responsibility boundaries
-
-### Scalability
-- Add new pages without restructuring
-- Reuse components across different pages
-- Share hooks between components
-
-### Testability
-- Hooks can be tested in isolation
-- Components receive props (easy to mock)
-- Pure functions in services
-
-### Developer Experience
-- Consistent file organization
-- Predictable file locations
-- Self-documenting structure
-
-## Technologies
-
-- **React 18**: Modern React with hooks
-- **Vite**: Fast build tool and dev server
-- **Tailwind CSS**: Utility-first CSS framework
-- **Lucide React**: Clean, consistent icons
-- **ESLint**: Code quality and consistency
-
-## Philosophy
-
-This application embodies the Henrietta philosophy:
-- **Agency**: Users control their engagement depth
-- **Consent**: Progressive disclosure, no forced paths
-- **Respect**: Calm interactions, no manipulation
-- **Infrastructure**: Built to last, not to extract
-
-The code structure mirrors these values through clean separation, clear contracts, and respectful user interactions.
-# henrietta
-# Henrietta
